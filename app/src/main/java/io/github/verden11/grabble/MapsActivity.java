@@ -38,29 +38,13 @@ import java.util.Date;
 import java.util.Locale;
 
 import io.github.verden11.grabble.Constants.Constants;
-import io.github.verden11.grabble.Helper.TodaysKML;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    /**
-     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
-     */
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 4000;
-    /**
-     * The fastest rate for active location updates. Exact. Updates will never be more frequent
-     * than this value.
-     */
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-    /**
-     * The distance value in meters for a letter to be collected
-     */
-    public static final long MIN_DISTANCE_TO_COLLECT_LETTER = 10;
     // Keys for storing activity state in the Bundle.
     protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
     protected final static String LOCATION_KEY = "location-key";
     protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
     private final String TAG = "MapsActivity FragmentActivity";
-    public TodaysKML todaysKML;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -77,17 +61,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Tracks the status of the location updates request. Value changes when the user presses the
      * Start Updates and Stop Updates buttons.
      */
-    protected Boolean mRequestingLocationUpdates = true;
+    protected Boolean mRequestingLocationUpdates;
     /**
      * Time when the location was updated represented as a String.
      */
     protected String mLastUpdateTime;
     Marker myLocMarker;
-    String myLastLocMaker;
-    KmlLayer kmlLayer;
     ArrayList<Marker> kmlMarkers;
     View rootView;
-    ArrayList<Character> collected;
+    ArrayList<Character> collected_chars;
     private GoogleMap mMap;  // Might be null if Google Play services APK is not available.
 
     @Override
@@ -97,7 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         rootView = findViewById(android.R.id.content);
         kmlMarkers = new ArrayList<>();
-        collected = new ArrayList<>();
+        collected_chars = new ArrayList<>();
         mRequestingLocationUpdates = true;
         mLastUpdateTime = "";
 
@@ -163,16 +145,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady");
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
         // Get day of the week
         Calendar sCalendar = Calendar.getInstance();
         String dayLongName = sCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()).toLowerCase();
+
+        // Download kml data for `today` - day of the week
         String fullUrl = "http://www.inf.ed.ac.uk/teaching/courses/selp/coursework/" + dayLongName + ".kml";
         DownloadTask task = new DownloadTask();
         task.execute(fullUrl);
 
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
     }
 
@@ -196,38 +180,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, lng + "");
         if (mMap != null) {
 
+            // remove old marker for mCurrentLocation location
             if (myLocMarker != null) {
                 myLocMarker.remove();
             }
 
+            // add new marker for mCurrentLocation location
             myLocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
                     .title("Your location")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-            myLastLocMaker = myLocMarker.getId();
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18));
 
 
+            // check if there are any letter nearby to collect
             if (kmlMarkers.size() > 0) {
-                ArrayList<Marker> toRemove = new ArrayList<>();
+                ArrayList<Marker> collected_here = new ArrayList<>();
                 for (Marker marker : kmlMarkers) {
                     LatLng pos = marker.getPosition();
                     String letter = marker.getTitle();
 
-                    Location loc = new Location("");
+                    // create a Location object of a letter placemark
+                    Location loc = new Location(letter);
                     loc.setLatitude(pos.latitude);
                     loc.setLongitude(pos.longitude);
 
-                    if (mCurrentLocation.distanceTo(loc) <= MIN_DISTANCE_TO_COLLECT_LETTER) {
+                    // check if letter is within the distance
+                    if (mCurrentLocation.distanceTo(loc) <= Constants.MIN_DISTANCE_TO_COLLECT_LETTER) {
                         Snackbar snackbar = Snackbar.make(rootView, letter + " Collected", Snackbar.LENGTH_SHORT);
                         snackbar.show();
-                        collected.add(letter.charAt(0));
-                        toRemove.add(marker);
+                        collected_chars.add(letter.charAt(0));
+                        collected_here.add(marker);
+                        // remove current marker from the map
                         marker.remove();
                         Log.d(TAG, "letter " + letter + " pos " + marker.getId());
                     }
                 }
-                kmlMarkers.removeAll(toRemove);
-                Log.d(TAG, " remaining : " + kmlMarkers.size() + "\n Collected: \n" + collected.toString());
+
+                //remove all collected letters
+                kmlMarkers.removeAll(collected_here);
+                Log.d(TAG, " remaining : " + kmlMarkers.size() + "\n Collected: \n" + collected_chars.toString());
 
 
             }
@@ -274,8 +265,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setInterval(Constants.UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setFastestInterval(Constants.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -384,7 +375,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 for (KmlPlacemark kmlPlacemark : layer.getPlacemarks()) {
 
                     String letter = kmlPlacemark.getProperty("description");
-
                     String placemark = kmlPlacemark.getGeometry().getGeometryObject().toString();
                     int start = placemark.indexOf('(');
                     int end = placemark.indexOf(')');
@@ -393,15 +383,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     double lngPlace = Double.parseDouble(latlngStr[1]);
                     LatLng latLng = new LatLng(latPlace, lngPlace);
 
+                    // draw maker on the map
                     Marker m = mMap.addMarker(new MarkerOptions()
                             .position(latLng)
                             .title(letter));
-
+                    // populate array list
                     kmlMarkers.add(m);
                 }
             }
-
-
         }
     }
 }
