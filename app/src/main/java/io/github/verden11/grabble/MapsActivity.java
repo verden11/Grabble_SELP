@@ -19,23 +19,33 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import io.github.verden11.grabble.Constants.Constants;
+import io.github.verden11.grabble.Helper.TodaysKML;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private final String TAG = "MapsActivity FragmentActivity";
@@ -43,7 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 4000;
 
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
@@ -87,7 +97,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;  // Might be null if Google Play services APK is not available.
 
-    String todaysKML = "KML still null";
+    public TodaysKML todaysKML;
+    Marker myLocMarker;
+    String myLastLocMaker;
 
 
     @Override
@@ -115,8 +127,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
-        DownloadTask task = new DownloadTask();
-        task.execute("http://www.inf.ed.ac.uk/teaching/courses/selp/coursework/sunday.kml");
+
+
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            public void run() {
+//                // Actions to do after 3 seconds
+//                for(int i = 0; i<todaysKML.getLetters().size(); i++){
+//                    mMap.addMarker(new MarkerOptions()
+//                    .position(todaysKML.getLocation().get(i))
+//                    .title("Place " + i));
+//                }
+//
+//                Log.d(TAG, todaysKML.getLetters().get(1).toString());
+//            }
+//        }, 3000);
 
 
     }
@@ -167,10 +192,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "onMapReady");
         mMap = googleMap;
 
+
         // Get day of the week
         Calendar sCalendar = Calendar.getInstance();
-        String dayLongName = sCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-        Log.d(TAG, dayLongName);
+        String dayLongName = sCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()).toLowerCase();
+        String fullUrl = "http://www.inf.ed.ac.uk/teaching/courses/selp/coursework/" + dayLongName + ".kml";
+        DownloadTask task = new DownloadTask();
+        task.execute(fullUrl);
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -195,12 +223,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, lat + "");
         Log.d(TAG, lng + "");
         if (mMap != null) {
-            mMap.clear();
 
-            mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("Your location"));
+            if (myLocMarker != null){
+                myLocMarker.remove();
+            }
 
+            myLocMarker =  mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
+                    .title("Your location")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            myLastLocMaker = myLocMarker.getId();
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18));
         }
+
     }
 
 
@@ -269,6 +303,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             if (mCurrentLocation != null) {
                 updateUI();
+                double lng = mCurrentLocation.getLongitude();
+                double lat = mCurrentLocation.getLatitude();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18));
             }
         }
 
@@ -322,9 +359,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         @Override
         protected void onPostExecute(String s) {
-//            Log.d(TAG, "@@@@ The length: " + s);
+            Log.d(TAG, "@@@@ The length: " + s);
 //            parse kml here
-            todaysKML = s;
+            ArrayList<Integer> names = new ArrayList<>();
+            ArrayList<Character> description = new ArrayList<>();
+            ArrayList<LatLng> coordinates = new ArrayList<>();
+            try {
+                int count = 0;
+
+                XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+                factory.setNamespaceAware(true);
+                XmlPullParser xpp = factory.newPullParser();
+
+                xpp.setInput(new StringReader(s));
+                int eventType = xpp.getEventType();
+                while (eventType != XmlPullParser.END_DOCUMENT) {
+                    if (eventType == XmlPullParser.TEXT && !xpp.getText().trim().isEmpty()) {
+                        switch (count % 3) {
+                            case 0:
+                                names.add(count);
+                                break;
+                            case 1:
+                                description.add(xpp.getText().charAt(0));
+                                break;
+                            case 2:
+                                String[] latlong = xpp.getText().split(",");
+                                double lat = Double.parseDouble(latlong[1]);
+                                double lng = Double.parseDouble(latlong[0]);
+                                LatLng latLng = new LatLng(lat, lng);
+                                coordinates.add(latLng);
+                                break;
+
+                        }
+                        count++;
+                    }
+                    eventType = xpp.next();
+                }
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            todaysKML = new TodaysKML(names, description, coordinates);
+            for (int i = 0; i < todaysKML.getLetters().size(); i++) {
+                mMap.addMarker(new MarkerOptions()
+                        .position(todaysKML.getLocation().get(i))
+                        .title("Letter " + todaysKML.getLetters().get(i)));
+            }
+
         }
     }
 
