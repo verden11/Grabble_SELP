@@ -4,6 +4,7 @@ package io.github.verden11.grabble;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -25,6 +26,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.kml.KmlContainer;
+import com.google.maps.android.kml.KmlGeometry;
+import com.google.maps.android.kml.KmlLayer;
+import com.google.maps.android.kml.KmlPlacemark;
 
 
 import org.xmlpull.v1.XmlPullParser;
@@ -100,6 +105,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public TodaysKML todaysKML;
     Marker myLocMarker;
     String myLastLocMaker;
+    KmlLayer kmlLayer;
+    ArrayList<Marker> kmlMarkers;
 
 
     @Override
@@ -107,7 +114,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_maps);
-
+        kmlMarkers = new ArrayList<>();
         mRequestingLocationUpdates = true;
         mLastUpdateTime = "";
 
@@ -127,21 +134,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
-
-
 //        Handler handler = new Handler();
 //        handler.postDelayed(new Runnable() {
 //            public void run() {
 //                // Actions to do after 3 seconds
-//                for(int i = 0; i<todaysKML.getLetters().size(); i++){
-//                    mMap.addMarker(new MarkerOptions()
-//                    .position(todaysKML.getLocation().get(i))
-//                    .title("Place " + i));
-//                }
-//
+////                for()
+//                kmlLayer.getContainers();
+//                kmlLayer.getPlacemarks();
 //                Log.d(TAG, todaysKML.getLetters().get(1).toString());
 //            }
-//        }, 3000);
+//        }, 5000);
 
 
     }
@@ -224,15 +226,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, lng + "");
         if (mMap != null) {
 
-            if (myLocMarker != null){
+            if (myLocMarker != null) {
                 myLocMarker.remove();
             }
 
-            myLocMarker =  mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
+            myLocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
                     .title("Your location")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
             myLastLocMaker = myLocMarker.getId();
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18));
+
+
+            if (kmlMarkers != null) {
+                for (Marker marker  : kmlMarkers) {
+                    LatLng pos = marker.getPosition();
+                    String letter = marker.getTitle();
+
+                    Location loc = new Location("");
+                    loc.setLatitude(pos.latitude);
+                    loc.setLongitude(pos.longitude);
+
+                    float distanceInMeters = mCurrentLocation.distanceTo(loc);
+                    if (distanceInMeters < 30) {
+                        
+
+                        Log.d(TAG, "letter " + letter + " is in " + distanceInMeters + " remaining : " +kmlMarkers.size());
+                        marker.remove();
+                    }
+
+
+//                    Log.d(TAG, kmlPlacemark.toString());
+                }
+
+
+            }
         }
 
     }
@@ -327,87 +354,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
     }
 
-    public class DownloadTask extends AsyncTask<String, Void, String> {
+    public class DownloadTask extends AsyncTask<String, Void, KmlLayer> {
 
         @Override
-        protected String doInBackground(String... urls) {
-            String result;
+        protected KmlLayer doInBackground(String... urls) {
             URL url;
             HttpURLConnection urlConnection;
 
             try {
                 url = new URL(urls[0]);
                 urlConnection = (HttpURLConnection) url.openConnection();
-
-
                 InputStream in = urlConnection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(in);
-                BufferedReader reader = new BufferedReader(inputStreamReader);
-                StringBuilder str = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    str.append(line);
-                }
-                in.close();
-                result = str.toString();
-                return result;
+                Log.d(TAG, "downloading");
+                KmlLayer layer = new KmlLayer(mMap, in, getApplicationContext());
+                return layer;
             } catch (Exception e) {
                 e.printStackTrace();
-                return "failed";
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            Log.d(TAG, "@@@@ The length: " + s);
-//            parse kml here
-            ArrayList<Integer> names = new ArrayList<>();
-            ArrayList<Character> description = new ArrayList<>();
-            ArrayList<LatLng> coordinates = new ArrayList<>();
-            try {
-                int count = 0;
+        protected void onPostExecute(KmlLayer layer) {
+            Log.d(TAG, "onPostExecute");
 
-                XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-                factory.setNamespaceAware(true);
-                XmlPullParser xpp = factory.newPullParser();
+            for (KmlPlacemark kmlPlacemark : layer.getPlacemarks()) {
 
-                xpp.setInput(new StringReader(s));
-                int eventType = xpp.getEventType();
-                while (eventType != XmlPullParser.END_DOCUMENT) {
-                    if (eventType == XmlPullParser.TEXT && !xpp.getText().trim().isEmpty()) {
-                        switch (count % 3) {
-                            case 0:
-                                names.add(count);
-                                break;
-                            case 1:
-                                description.add(xpp.getText().charAt(0));
-                                break;
-                            case 2:
-                                String[] latlong = xpp.getText().split(",");
-                                double lat = Double.parseDouble(latlong[1]);
-                                double lng = Double.parseDouble(latlong[0]);
-                                LatLng latLng = new LatLng(lat, lng);
-                                coordinates.add(latLng);
-                                break;
+                String letter = kmlPlacemark.getProperty("description");
 
-                        }
-                        count++;
-                    }
-                    eventType = xpp.next();
-                }
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+                String placemark = kmlPlacemark.getGeometry().getGeometryObject().toString();
+                int start = placemark.indexOf('(');
+                int end = placemark.indexOf(')');
+                String[] latlngStr = placemark.substring(start + 1, end).split(",");
+                double latPlace = Double.parseDouble(latlngStr[0]);
+                double lngPlace = Double.parseDouble(latlngStr[1]);
+                LatLng latLng = new LatLng(latPlace, lngPlace);
+
+                Marker m = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(letter));
+
+                kmlMarkers.add(m);
             }
-
-            todaysKML = new TodaysKML(names, description, coordinates);
-            for (int i = 0; i < todaysKML.getLetters().size(); i++) {
-                mMap.addMarker(new MarkerOptions()
-                        .position(todaysKML.getLocation().get(i))
-                        .title("Letter " + todaysKML.getLetters().get(i)));
-            }
-
         }
     }
 
