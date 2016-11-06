@@ -1,11 +1,11 @@
 package io.github.verden11.grabble;
 
-import android.*;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -18,13 +18,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Locale;
 
 import io.github.verden11.grabble.Constants.Constants;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
-    private final String Activity_TAG = "MapsActivity FragmentActivity";
+    private final String TAG = "MapsActivity FragmentActivity";
     private GoogleMap mMap;  // Might be null if Google Play services APK is not available.
 
     LocationManager locationManager;
@@ -34,9 +40,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        Log.d(Activity_TAG, "onCreate");
+        Log.d(TAG, "onCreate");
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         askForPermission();
-        setUpMapIfNeeded();
+
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         provider = locationManager.getBestProvider(new Criteria(), false);
@@ -46,21 +56,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             onLocationChanged(location);
         }
 
+        DownloadTask task = new DownloadTask();
+        task.execute("http://www.inf.ed.ac.uk/teaching/courses/selp/coursework/sunday.kml");
+
 
     }
-
-    private void setUpMapIfNeeded() {
-        Log.d(Activity_TAG, "setUpMapIfNeeded");
-
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-        }
-    }
-
 
     /**
      * Manipulates the map once available.
@@ -73,25 +73,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(Activity_TAG, "onMapReady");
+        Log.d(TAG, "onMapReady");
 
         // Get day of the week
         Calendar sCalendar = Calendar.getInstance();
         String dayLongName = sCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-        Log.d(Activity_TAG, dayLongName);
+        Log.d(TAG, dayLongName);
 
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(Activity_TAG, "onLocationChanged");
+        Log.d(TAG, "onLocationChanged");
 
         double lat = location.getLatitude();
         double lng = location.getLongitude();
@@ -120,7 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void askForPermission() {
-        Log.d(Activity_TAG, "askForPermission");
+        Log.d(TAG, "askForPermission");
 
         ActivityCompat.requestPermissions(this,
                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -136,18 +136,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onResume() {
-        Log.d(Activity_TAG, "onResume");
+        Log.d(TAG, "onResume");
         super.onResume();
-//        askForPermission();
-        setUpMapIfNeeded();
         locationManager.requestLocationUpdates(provider, 400, 1, this);
     }
 
     @Override
     protected void onPause() {
-        Log.d(Activity_TAG, "onPause");
+        Log.d(TAG, "onPause");
         super.onPause();
-//        askForPermission();
         locationManager.removeUpdates(this);
+    }
+
+    public class DownloadTask extends AsyncTask<String, Void, String> {
+
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String result;
+            URL url;
+            HttpURLConnection urlConnection;
+
+            try {
+                url = new URL(urls[0]);
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+
+                InputStream in = urlConnection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(in);
+                BufferedReader reader = new BufferedReader(inputStreamReader);
+                StringBuilder str = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    str.append(line);
+                }
+                in.close();
+                result = str.toString();
+                return result;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "failed";
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.d(TAG, "@@@@ The length: " + s);
+        }
     }
 }
