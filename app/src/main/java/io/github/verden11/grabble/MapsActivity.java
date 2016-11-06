@@ -1,6 +1,7 @@
 package io.github.verden11.grabble;
 
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -352,6 +353,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 18));
 
         }
+    }
+
+    public void moveToUserPeronalPagesActivity(View view) {
+        Intent i = new Intent(this, UserPersonalPages.class);
+        startActivity(i);
     }
 
     public class DownloadTask extends AsyncTask<String, Void, KmlLayer> {

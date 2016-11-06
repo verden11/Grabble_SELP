@@ -4,4 +4,7 @@
 
     <string name="map_recenter">Recenter</string>
     <string name="show_collection">Collection</string>
+    <string name="title_activity_user_personal_pages">UserPersonalPages</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
