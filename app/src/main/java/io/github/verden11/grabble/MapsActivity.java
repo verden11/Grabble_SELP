@@ -4,17 +4,18 @@ package io.github.verden11.grabble;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,25 +23,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-
-
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.kml.KmlContainer;
-import com.google.maps.android.kml.KmlGeometry;
 import com.google.maps.android.kml.KmlLayer;
 import com.google.maps.android.kml.KmlPlacemark;
 
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -53,74 +41,68 @@ import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.TodaysKML;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    private final String TAG = "MapsActivity FragmentActivity";
-
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 4000;
-
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
      * than this value.
      */
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-
+    /**
+     * The distance value in meters for a letter to be collected
+     */
+    public static final long MIN_DISTANCE_TO_COLLECT_LETTER = 10;
     // Keys for storing activity state in the Bundle.
     protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
     protected final static String LOCATION_KEY = "location-key";
     protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
-
-
+    private final String TAG = "MapsActivity FragmentActivity";
+    public TodaysKML todaysKML;
     /**
      * Provides the entry point to Google Play services.
      */
     protected GoogleApiClient mGoogleApiClient;
-
     /**
      * Stores parameters for requests to the FusedLocationProviderApi.
      */
     protected LocationRequest mLocationRequest;
-
     /**
      * Represents a geographical location.
      */
     protected Location mCurrentLocation;
-
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
      * Start Updates and Stop Updates buttons.
      */
     protected Boolean mRequestingLocationUpdates = true;
-
     /**
      * Time when the location was updated represented as a String.
      */
     protected String mLastUpdateTime;
-
-
-    private GoogleMap mMap;  // Might be null if Google Play services APK is not available.
-
-    public TodaysKML todaysKML;
     Marker myLocMarker;
     String myLastLocMaker;
     KmlLayer kmlLayer;
     ArrayList<Marker> kmlMarkers;
-
+    View rootView;
+    ArrayList<Character> collected;
+    private GoogleMap mMap;  // Might be null if Google Play services APK is not available.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_maps);
+        rootView = findViewById(android.R.id.content);
         kmlMarkers = new ArrayList<>();
+        collected = new ArrayList<>();
         mRequestingLocationUpdates = true;
         mLastUpdateTime = "";
 
         // Update values using data stored in the Bundle.
         updateValuesFromBundle(savedInstanceState);
-
 
         // Kick off the process of building a GoogleApiClient and requesting the LocationServices
         // API.
@@ -132,18 +114,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            public void run() {
-//                // Actions to do after 3 seconds
-////                for()
-//                kmlLayer.getContainers();
-//                kmlLayer.getPlacemarks();
-//                Log.d(TAG, todaysKML.getLetters().get(1).toString());
-//            }
-//        }, 5000);
 
 
     }
@@ -237,8 +207,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18));
 
 
-            if (kmlMarkers != null) {
-                for (Marker marker  : kmlMarkers) {
+            if (kmlMarkers.size() > 0) {
+                ArrayList<Marker> toRemove = new ArrayList<>();
+                for (Marker marker : kmlMarkers) {
                     LatLng pos = marker.getPosition();
                     String letter = marker.getTitle();
 
@@ -246,17 +217,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     loc.setLatitude(pos.latitude);
                     loc.setLongitude(pos.longitude);
 
-                    float distanceInMeters = mCurrentLocation.distanceTo(loc);
-                    if (distanceInMeters < 30) {
-                        
-
-                        Log.d(TAG, "letter " + letter + " is in " + distanceInMeters + " remaining : " +kmlMarkers.size());
+                    if (mCurrentLocation.distanceTo(loc) <= MIN_DISTANCE_TO_COLLECT_LETTER) {
+                        Snackbar snackbar = Snackbar.make(rootView, letter + " Collected", Snackbar.LENGTH_SHORT);
+                        snackbar.show();
+                        collected.add(letter.charAt(0));
+                        toRemove.add(marker);
                         marker.remove();
+                        Log.d(TAG, "letter " + letter + " pos " + marker.getId());
                     }
-
-
-//                    Log.d(TAG, kmlPlacemark.toString());
                 }
+                kmlMarkers.removeAll(toRemove);
+                Log.d(TAG, " remaining : " + kmlMarkers.size() + "\n Collected: \n" + collected.toString());
 
 
             }
@@ -354,51 +325,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
     }
 
-    public class DownloadTask extends AsyncTask<String, Void, KmlLayer> {
-
-        @Override
-        protected KmlLayer doInBackground(String... urls) {
-            URL url;
-            HttpURLConnection urlConnection;
-
-            try {
-                url = new URL(urls[0]);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = urlConnection.getInputStream();
-                Log.d(TAG, "downloading");
-                KmlLayer layer = new KmlLayer(mMap, in, getApplicationContext());
-                return layer;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(KmlLayer layer) {
-            Log.d(TAG, "onPostExecute");
-
-            for (KmlPlacemark kmlPlacemark : layer.getPlacemarks()) {
-
-                String letter = kmlPlacemark.getProperty("description");
-
-                String placemark = kmlPlacemark.getGeometry().getGeometryObject().toString();
-                int start = placemark.indexOf('(');
-                int end = placemark.indexOf(')');
-                String[] latlngStr = placemark.substring(start + 1, end).split(",");
-                double latPlace = Double.parseDouble(latlngStr[0]);
-                double lngPlace = Double.parseDouble(latlngStr[1]);
-                LatLng latLng = new LatLng(latPlace, lngPlace);
-
-                Marker m = mMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title(letter));
-
-                kmlMarkers.add(m);
-            }
-        }
-    }
-
     /**
      * Stores activity data in the Bundle.
      */
@@ -429,5 +355,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addApi(LocationServices.API)
                 .build();
         createLocationRequest();
+    }
+
+    public class DownloadTask extends AsyncTask<String, Void, KmlLayer> {
+
+        @Override
+        protected KmlLayer doInBackground(String... urls) {
+            URL url;
+            HttpURLConnection urlConnection;
+
+            try {
+                url = new URL(urls[0]);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream in = urlConnection.getInputStream();
+                Log.d(TAG, "downloading");
+                KmlLayer layer = new KmlLayer(mMap, in, getApplicationContext());
+                return layer;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(KmlLayer layer) {
+            Log.d(TAG, "onPostExecute");
+            if (layer != null) {
+                for (KmlPlacemark kmlPlacemark : layer.getPlacemarks()) {
+
+                    String letter = kmlPlacemark.getProperty("description");
+
+                    String placemark = kmlPlacemark.getGeometry().getGeometryObject().toString();
+                    int start = placemark.indexOf('(');
+                    int end = placemark.indexOf(')');
+                    String[] latlngStr = placemark.substring(start + 1, end).split(",");
+                    double latPlace = Double.parseDouble(latlngStr[0]);
+                    double lngPlace = Double.parseDouble(latlngStr[1]);
+                    LatLng latLng = new LatLng(latPlace, lngPlace);
+
+                    Marker m = mMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .title(letter));
+
+                    kmlMarkers.add(m);
+                }
+            }
+
+
+        }
     }
 }
