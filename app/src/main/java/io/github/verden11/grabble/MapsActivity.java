@@ -189,7 +189,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             myLocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
                     .title("Your location")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18));
 
 
             // check if there are any letter nearby to collect
@@ -292,9 +291,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             if (mCurrentLocation != null) {
                 updateUI();
-                double lng = mCurrentLocation.getLongitude();
-                double lat = mCurrentLocation.getLatitude();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18));
             }
         }
 
@@ -346,6 +342,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addApi(LocationServices.API)
                 .build();
         createLocationRequest();
+    }
+
+    public void centerMyLocation(View view) {
+        if (mCurrentLocation != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 18));
+
+        }
     }
 
     public class DownloadTask extends AsyncTask<String, Void, KmlLayer> {

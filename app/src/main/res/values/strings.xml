@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Grabble</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="map_recenter">Recenter</string>
+    <string name="show_collection">Collection</string>
 </resources>

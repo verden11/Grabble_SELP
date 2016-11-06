@@ -4,4 +4,27 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.github.verden11.grabble.MapsActivity" />
+    tools:context="io.github.verden11.grabble.MapsActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginTop="20dp"
+        android:onClick="centerMyLocation"
+        android:padding="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/map_recenter" />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="20dp"
+        android:onClick="centerMyLocation"
+        android:padding="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/show_collection" />
+
+</fragment>
