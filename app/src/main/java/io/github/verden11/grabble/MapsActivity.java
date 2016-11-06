@@ -291,6 +291,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             if (mCurrentLocation != null) {
                 updateUI();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 18));
             }
         }
 
@@ -377,7 +379,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d(TAG, "onPostExecute");
             if (layer != null) {
                 for (KmlPlacemark kmlPlacemark : layer.getPlacemarks()) {
-
                     String letter = kmlPlacemark.getProperty("description");
                     String placemark = kmlPlacemark.getGeometry().getGeometryObject().toString();
                     int start = placemark.indexOf('(');
