@@ -202,7 +202,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             CircleOptions circleOptions = new CircleOptions()
                     .center(new LatLng(myLat, myLng))
-                    .radius(Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISABLE)
+                    .radius(Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE)
                     .strokeWidth(2)
                     .strokeColor(Color.BLUE)
                     .fillColor(Color.argb(60, 0, 0, 128));
@@ -226,7 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
                     // check if marker is within the distance to be viable
-                    if (distance <= Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISABLE) {
+                    if (distance <= Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE) {
                         marker.setVisible(true);
                         // check if letter is within the distance
                         if (mCurrentLocation.distanceTo(loc) <= Constants.MAX_DISTANCE_TO_COLLECT_LETTER) {
@@ -437,7 +437,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     if (mCurrentLocation != null) {
                         float distance = mCurrentLocation.distanceTo(loc);
-                        if (distance <= Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISABLE) {
+                        if (distance <= Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE) {
                             m.setVisible(true);
                         }
                     }
