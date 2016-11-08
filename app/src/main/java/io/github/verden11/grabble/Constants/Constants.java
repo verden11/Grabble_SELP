@@ -19,7 +19,12 @@ public class Constants {
     /**
      * The distance value in meters for a letter to be collected
      */
-    public static final long MIN_DISTANCE_TO_COLLECT_LETTER = 10;
+    public static final long MAX_DISTANCE_TO_COLLECT_LETTER = 10;
+
+    /**
+     * The distance for a placemark to be visible on the map
+     */
+    public static final long MAX_DISTANCE_TO_MAKE_MARKER_VISABLE = 50;
 
     public class permissions {
         public final static int ACCESS_FINE_LOCATION = 1001;

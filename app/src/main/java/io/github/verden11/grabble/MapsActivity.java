@@ -2,6 +2,7 @@ package io.github.verden11.grabble;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -71,6 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ArrayList<Marker> kmlMarkers;
     View rootView;
     ArrayList<Character> collected_chars;
+    Circle circle; // a circle with certain radius where placemarks become visible
     private GoogleMap mMap;  // Might be null if Google Play services APK is not available.
 
     @Override
@@ -175,10 +179,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void updateUI() {
         Log.d(TAG, "updateUI");
-        double lat = mCurrentLocation.getLatitude();
-        double lng = mCurrentLocation.getLongitude();
-        Log.d(TAG, lat + "");
-        Log.d(TAG, lng + "");
+        double myLat = mCurrentLocation.getLatitude();
+        double myLng = mCurrentLocation.getLongitude();
+        Log.d(TAG, myLat + "");
+        Log.d(TAG, myLng + "");
         if (mMap != null) {
 
             // remove old marker for mCurrentLocation location
@@ -186,10 +190,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 myLocMarker.remove();
             }
 
+            // remove old circle around users location
+            if (circle != null) {
+                circle.remove();
+            }
+
             // add new marker for mCurrentLocation location
-            myLocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng))
-                    .title("Your location")
+            myLocMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(myLat, myLng))
+                    .title("Users Nickname")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+            CircleOptions circleOptions = new CircleOptions()
+                    .center(new LatLng(myLat, myLng))
+                    .radius(Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISABLE)
+                    .strokeWidth(2)
+                    .strokeColor(Color.BLUE)
+                    .fillColor(Color.argb(60, 0, 0, 128));
+            circle = mMap.addCircle(circleOptions);
 
 
             // check if there are any letter nearby to collect
@@ -204,16 +221,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     loc.setLatitude(pos.latitude);
                     loc.setLongitude(pos.longitude);
 
-                    // check if letter is within the distance
-                    if (mCurrentLocation.distanceTo(loc) <= Constants.MIN_DISTANCE_TO_COLLECT_LETTER) {
-                        Snackbar snackbar = Snackbar.make(rootView, letter + " Collected", Snackbar.LENGTH_SHORT);
-                        snackbar.show();
-                        collected_chars.add(letter.charAt(0));
-                        collected_here.add(marker);
-                        // remove current marker from the map
-                        marker.remove();
-                        Log.d(TAG, "letter " + letter + " pos " + marker.getId());
+                    // Distance from users location to a placemark
+                    float distance = mCurrentLocation.distanceTo(loc);
+
+
+                    // check if marker is within the distance to be viable
+                    if (distance <= Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISABLE) {
+                        marker.setVisible(true);
+                        // check if letter is within the distance
+                        if (mCurrentLocation.distanceTo(loc) <= Constants.MAX_DISTANCE_TO_COLLECT_LETTER) {
+                            Snackbar snackbar = Snackbar.make(rootView, letter + " Collected", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                            collected_chars.add(letter.charAt(0));
+                            collected_here.add(marker);
+                            // remove current marker for the collected letter
+                            marker.remove();
+                            Log.d(TAG, "letter " + letter + " pos " + marker.getId());
+                        }
+                    } else {
+                        marker.setVisible(false);
                     }
+
+
                 }
 
                 //remove all collected letters
@@ -393,13 +422,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     double latPlace = Double.parseDouble(latlngStr[0]);
                     double lngPlace = Double.parseDouble(latlngStr[1]);
                     LatLng latLng = new LatLng(latPlace, lngPlace);
+                    Location loc = new Location("");
+                    loc.setLatitude(latLng.latitude);
+                    loc.setLongitude(latLng.longitude);
+
 
                     // draw maker on the map
                     Marker m = mMap.addMarker(new MarkerOptions()
                             .position(latLng)
-                            .title(letter));
+                            .title(letter)
+                            .visible(false));
                     // populate array list
                     kmlMarkers.add(m);
+
+                    if (mCurrentLocation != null) {
+                        float distance = mCurrentLocation.distanceTo(loc);
+                        if (distance <= Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISABLE) {
+                            m.setVisible(true);
+                        }
+                    }
                 }
             }
         }
