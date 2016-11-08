@@ -1,10 +1,13 @@
 package io.github.verden11.grabble.Constants;
 
-/**
- * Created by verden on 05/11/16.
- */
 
 public class Constants {
+
+    /**
+     * Constants for permission checks
+     */
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 7001;
+
 
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
