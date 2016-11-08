@@ -410,7 +410,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setNegativeButton(R.string.close_app, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Close the application
-                        finish();
+                        finishAffinity();
                     }
                 });
 
