@@ -1,6 +1,7 @@
 package io.github.verden11.grabble;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 
@@ -386,6 +388,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void moveToUserPeronalPagesActivity(View view) {
         Intent i = new Intent(this, UserPersonalPages.class);
+        startActivity(i);
+    }
+
+    /**
+     * If back button is pressed open a dialog box to logout or close application
+     */
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed");
+        // Create dialog box
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_back_message)
+                .setPositiveButton(R.string.log_out, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Go back to Login screen
+                        goToLogin();
+                    }
+                })
+                .setNegativeButton(R.string.close_app, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Close the application
+                        finish();
+                    }
+                });
+
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        Log.d(TAG, "onBackPressed2");
+
+    }
+
+    public void goToLogin() {
+        Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
     }
 

@@ -21,4 +21,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_back_message">Pick an option</string>
+    <string name="log_out">Log Out</string>
+    <string name="close_app">Exit Grabble</string>
 </resources>
