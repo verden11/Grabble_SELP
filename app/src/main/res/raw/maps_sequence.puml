@@ -1,5 +1,6 @@
 @startuml
 (*)  --> "onCreate"
+left to right direction
 --> "checkLocationPermission"
 --> "updateValuesFromBundle"
 --> "onStart"
@@ -13,14 +14,21 @@
 --> "buildGoogleApiClient"
 --> "onResume"
     If "permission granted" then
-    --> [YES]"onConnected"
+    --> [Yes]"onConnected"
     --> "createLocationRequest"
     --> "startLocationUpdates"
     --> "onLocationChanged"
     --> "updateUI"
     --> "updateUI"
+    --> "onResume"
     else
     --> [Permission Denied]"onRequestPermissionsResult"
     --> "onResume"
+    else
+    If "onBackPressed" then
+        --> "stopLocationUpdates"
+        --> "onStop"
     Endif
+    Endif
+
 @enduml

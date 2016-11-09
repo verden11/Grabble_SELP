@@ -47,7 +47,9 @@
         <activity
             android:name=".UserPersonalPages"
             android:label="@string/title_activity_user_personal_pages"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
