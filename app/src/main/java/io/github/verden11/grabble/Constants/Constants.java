@@ -29,8 +29,39 @@ public class Constants {
      */
     public static final long MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE = 50;
 
-    public class permissions {
-        public final static int ACCESS_FINE_LOCATION = 1001;
-    }
+
+    /**
+     * Letter scores
+     */
+    public static final int score_A = 3;
+    public static final int score_B = 20;
+    public static final int score_C = 13;
+    public static final int score_D = 10;
+    public static final int score_E = 1;
+
+    public static final int score_F = 15;
+    public static final int score_G = 18;
+    public static final int score_H = 9;
+    public static final int score_I = 5;
+    public static final int score_J = 25;
+
+    public static final int score_K = 22;
+    public static final int score_L = 11;
+    public static final int score_M = 14;
+    public static final int score_N = 6;
+    public static final int score_O = 4;
+
+    public static final int score_P = 19;
+    public static final int score_Q = 24;
+    public static final int score_R = 8;
+    public static final int score_S = 7;
+    public static final int score_T = 2;
+
+    public static final int score_U = 12;
+    public static final int score_V = 21;
+    public static final int score_W = 17;
+    public static final int score_X = 23;
+    public static final int score_Y = 16;
+    public static final int score_Z = 26;
 
 }
