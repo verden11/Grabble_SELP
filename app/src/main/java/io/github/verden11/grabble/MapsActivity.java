@@ -19,6 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -439,9 +440,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay!
 
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                             android.Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
@@ -452,6 +452,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             buildGoogleApiClient();
                         }
                         mMap.setMyLocationEnabled(true);
+
+                        // if current location is null then set it to last know location
+                        if (mCurrentLocation == null) {
+                            Toast.makeText(getApplicationContext(), "Please make sure your GPS is enabled", Toast.LENGTH_SHORT);
+                            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(
+                                    mGoogleApiClient);
+                        }
                     }
 
                 } else {
