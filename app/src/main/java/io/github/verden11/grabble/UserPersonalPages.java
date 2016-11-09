@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class UserPersonalPages extends AppCompatActivity {
+    private final static String TAG = "UserPersonalPages";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -36,6 +38,7 @@ public class UserPersonalPages extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_user_personal_pages);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -63,6 +66,7 @@ public class UserPersonalPages extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_user_personal_pages, menu);
         return true;
@@ -70,6 +74,7 @@ public class UserPersonalPages extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -87,6 +92,7 @@ public class UserPersonalPages extends AppCompatActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -94,6 +100,7 @@ public class UserPersonalPages extends AppCompatActivity {
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
+            Log.d(TAG, "PlaceholderFragment");
         }
 
         /**
@@ -101,6 +108,7 @@ public class UserPersonalPages extends AppCompatActivity {
          * number.
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {
+            Log.d(TAG, "PlaceholderFragment");
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -111,6 +119,7 @@ public class UserPersonalPages extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+            Log.d(TAG, "onCreateView");
             View rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
@@ -126,10 +135,12 @@ public class UserPersonalPages extends AppCompatActivity {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+            Log.d(TAG, "SectionsPagerAdapter");
         }
 
         @Override
         public Fragment getItem(int position) {
+            Log.d(TAG, "getItem");
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position + 1);
@@ -137,12 +148,14 @@ public class UserPersonalPages extends AppCompatActivity {
 
         @Override
         public int getCount() {
+//            Log.d(TAG, "getCount");
             // Show 3 total pages.
             return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
+            Log.d(TAG, "getPageTitle");
             switch (position) {
                 case 0:
                     return "Collection";
