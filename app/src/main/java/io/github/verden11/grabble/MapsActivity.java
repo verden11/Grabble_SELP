@@ -119,7 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param savedInstanceState The activity state saved in the Bundle.
      */
     private void updateValuesFromBundle(Bundle savedInstanceState) {
-        Log.i(TAG, "Updating values from bundle");
+        Log.i(TAG, "updateValuesFromBundle");
         if (savedInstanceState != null) {
             // Update the value of mRequestingLocationUpdates from the Bundle, and make sure that
             // the Start Updates and Stop Updates buttons are correctly enabled or disabled.
@@ -201,8 +201,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "updateUI");
         double myLat = mCurrentLocation.getLatitude();
         double myLng = mCurrentLocation.getLongitude();
-        Log.d(TAG, myLat + "");
-        Log.d(TAG, myLng + "");
+        Log.i(TAG, myLat + "");
+        Log.i(TAG, myLng + "");
         if (mMap != null) {
 
 
@@ -306,10 +306,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     protected void stopLocationUpdates() {
+        Log.d(TAG, "stopLocationUpdates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
     protected void createLocationRequest() {
+        Log.d(TAG, "createLocationRequest");
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(Constants.UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(Constants.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
@@ -317,6 +319,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     protected void startLocationUpdates() {
+        Log.d(TAG, "startLocationUpdates");
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -349,6 +352,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Stores activity data in the Bundle.
      */
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.d(TAG, "onSaveInstanceState");
         savedInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates);
         savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
         savedInstanceState.putString(LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
@@ -361,7 +365,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * LocationServices API.
      */
     protected synchronized void buildGoogleApiClient() {
-        Log.i(TAG, "Building GoogleApiClient");
+        Log.i(TAG, "buildGoogleApiClient");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -371,6 +375,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void goToPersonalPages(View view) {
+        Log.d(TAG, "goToPersonalPages");
         Intent i = new Intent(this, UserPersonalPages.class);
         startActivity(i);
     }
@@ -404,6 +409,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void goToLogin() {
+        Log.d(TAG, "goToLogin");
         Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
     }
@@ -411,6 +417,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult");
         switch (requestCode) {
             case Constants.MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
