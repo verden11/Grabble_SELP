@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import io.github.verden11.grabble.Constants.Constants;
 
@@ -11,6 +12,7 @@ import io.github.verden11.grabble.Constants.Constants;
 public class PermissionHelper {
 
     public static boolean checkLocationPermission(Activity activity) {
+        Log.d("MapsActivity", "checkLocationPermission");
         if (ContextCompat.checkSelfPermission(activity,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {

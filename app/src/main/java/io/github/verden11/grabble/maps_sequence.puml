@@ -1,0 +1,26 @@
+@startuml
+(*)  --> "onCreate"
+--> "checkLocationPermission"
+--> "updateValuesFromBundle"
+--> "onStart"
+--> "onResume"
+--> "onPause"
+--> "onMapReady"
+--> "DownloadKMLfile"
+--> "onSaveInstanceState"
+--> "onPostExecute"
+--> "onRequestPermissionsResult"
+--> "buildGoogleApiClient"
+--> "onResume"
+    If "permission granted" then
+    --> [YES]"onConnected"
+    --> "createLocationRequest"
+    --> "startLocationUpdates"
+    --> "onLocationChanged"
+    --> "updateUI"
+    --> "updateUI"
+    else
+    --> [Permission Denied]"onRequestPermissionsResult"
+    --> "onResume"
+    Endif
+@enduml
