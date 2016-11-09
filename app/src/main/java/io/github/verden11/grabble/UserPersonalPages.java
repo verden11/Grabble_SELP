@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class UserPersonalPages extends AppCompatActivity {
@@ -108,7 +109,7 @@ public class UserPersonalPages extends AppCompatActivity {
          * number.
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {
-            Log.d(TAG, "PlaceholderFragment");
+            Log.d(TAG, "newInstance");
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -119,10 +120,30 @@ public class UserPersonalPages extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            Log.d(TAG, "onCreateView");
+            int sectionNumb = getArguments().getInt(ARG_SECTION_NUMBER);
+            Log.d(TAG, "onCreateView " + sectionNumb);
             View rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            Button button = (Button) rootView.findViewById(R.id.b_first);
+            switch (sectionNumb) {
+                case 1:
+                    Log.d(TAG, "onCreateView 1 in switch");
+                    button.setText("1");
+                    break;
+                case 2:
+                    Log.d(TAG, "onCreateView 2 in switch");
+                    button.setText("2");
+                    break;
+                case 3:
+                    Log.d(TAG, "onCreateView 3 in switch");
+                    button.setText("3");
+                    break;
+                default:
+                    Log.d(TAG, "onCreateView default");
+                    break;
+            }
             return rootView;
         }
     }
@@ -158,10 +179,13 @@ public class UserPersonalPages extends AppCompatActivity {
             Log.d(TAG, "getPageTitle");
             switch (position) {
                 case 0:
+                    Log.d(TAG, "0");
                     return "Collection";
                 case 1:
+                    Log.d(TAG, "1");
                     return "SECTION 2";
                 case 2:
+                    Log.d(TAG, "2");
                     return "Preferences";
             }
             return null;
