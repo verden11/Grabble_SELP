@@ -54,4 +54,12 @@ public class Hashes {
         }
         return new String(hexChars);
     }
+
+
+    public static String hashPassword(String email, String password) {
+        String mPasswordHash = password + email;
+        mPasswordHash = md5(mPasswordHash);
+        mPasswordHash = sha1(mPasswordHash);
+        return mPasswordHash;
+    }
 }
