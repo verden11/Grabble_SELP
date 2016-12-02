@@ -4,12 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -20,6 +22,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +36,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.verden11.grabble.Helper.DbHelper;
+import io.github.verden11.grabble.Helper.Hashes;
 import io.github.verden11.grabble.Helper.Validate;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -41,6 +46,8 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+    private final String TAG = "LoginActivityTAG";
+    private SQLiteDatabase db;
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -69,6 +76,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // get SQLite
+        DbHelper mDbHelper = new DbHelper(this);
+        // Gets the data repository in write mode
+        db = mDbHelper.getWritableDatabase();
+
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -323,31 +337,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mPassword;
 
         UserLoginTask(String email, String password) {
-            mEmail = email;
+            mEmail = email.toLowerCase();
             mPassword = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+            // concatinate password with email to ensure unique passwords (as emails must be unique)
+            String mPasswordHash = mPassword + mEmail;
+            mPasswordHash = Hashes.md5(mPasswordHash);
+            mPasswordHash = Hashes.sha1(mPasswordHash);
+
+            // find check if user details exists in database
+            Cursor c = db.rawQuery("SELECT count(1) FROM users WHERE email = '" + mEmail +
+                    "' AND password = '" + mPassword + "'", null);
+            c.moveToFirst();
+            //
+            int count = c.getInt(0);
+            c.close();
+            if (count == 1) {
+                // details match
+                return true;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
 
-            // TODO: register the new account here.
-            return true;
+            // TODO: register the new account
+            return false;
         }
 
         @Override
