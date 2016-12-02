@@ -125,6 +125,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             mNicknameView.setError(getString(R.string.error_field_required));
             focusView = mNicknameView;
             cancel = true;
+        } else if (isNicknameTaken()) {
+            mNicknameView.setError(getString(R.string.error_nickname_taken));
+            focusView = mNicknameView;
+            cancel = true;
         }
 
         // Check for a valid password, if the user entered one.
@@ -145,6 +149,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             cancel = true;
         } else if (!Validate.isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
+            cancel = true;
+        } else if (isEmailTaken()) {
+            mEmailView.setError(getString(R.string.error_email_taken));
             focusView = mEmailView;
             cancel = true;
         }
@@ -322,6 +330,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    private boolean isNicknameTaken() {
+        return true;
+    }
+
+    private boolean isEmailTaken() {
+        return true;
     }
 }
 
