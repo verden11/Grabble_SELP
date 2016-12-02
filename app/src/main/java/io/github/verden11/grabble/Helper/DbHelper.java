@@ -4,10 +4,11 @@ package io.github.verden11.grabble.Helper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Matrix;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 public class DbHelper extends SQLiteOpenHelper {
+    private static final String TAG = "DbHelperTAG";
     // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Grabble.db";
@@ -27,6 +28,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
+        Log.d(TAG, SQL_CREATE_ENTRIES);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -40,7 +42,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     private static final String TEXT_TYPE = " TEXT";
-    private static final String UNIQUE = "UNIQUE";
+    private static final String UNIQUE = " UNIQUE";
     private static final String COMMA_SEP = ",";
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + UsersEntry.TABLE_NAME + " (" +
