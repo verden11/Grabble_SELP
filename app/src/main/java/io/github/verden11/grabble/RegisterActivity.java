@@ -49,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
 
     // UI references.
+    private EditText mNicknameView;
     private EditText mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -67,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
+        mNicknameView = (EditText) findViewById(R.id.nickname);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -104,15 +106,25 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         }
 
         // Reset errors.
+        mNicknameView.setError(null);
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
-        // Store values at the time of the login attempt.
+        // Store values at the time of the register&login attempt.
+        String nickname = mNicknameView.getText().toString();
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
+
+        // TODO check if nickname is taken
+        // Check if nickname is valid
+        if (TextUtils.isEmpty(nickname)) {
+            mNicknameView.setError(getString(R.string.error_field_required));
+            focusView = mNicknameView;
+            cancel = true;
+        }
 
         // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(password)) {
@@ -144,7 +156,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(nickname, email, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -263,10 +275,12 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
+        private final String mNickname;
         private final String mEmail;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String nickname, String email, String password) {
+            mNickname = nickname;
             mEmail = email.toLowerCase();
             mPassword = password;
         }
@@ -274,25 +288,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            // concatinate password with email to ensure unique passwords (as emails must be unique)
-            String mPasswordHash = mPassword + mEmail;
-            mPasswordHash = Hashes.md5(mPasswordHash);
-            mPasswordHash = Hashes.sha1(mPasswordHash);
-
-            // find check if user details exists in database
-            Cursor c = db.rawQuery("SELECT count(1) FROM users WHERE email = '" + mEmail +
-                    "' AND password = '" + mPassword + "'", null);
-            c.moveToFirst();
-            //
-            int count = c.getInt(0);
-            c.close();
-            if (count == 1) {
-                // details match
-                return true;
-            }
+            // TODO register user
 
 
-            // TODO: register the new account
             return false;
         }
 
