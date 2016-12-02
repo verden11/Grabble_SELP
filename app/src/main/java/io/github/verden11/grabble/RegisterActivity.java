@@ -249,23 +249,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.dialog_back_message)
-                .setPositiveButton(R.string.close_app, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Close the application
-                        finishAffinity();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Cancel dialog box
-                    }
-                });
-
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        Intent i = new Intent(this, LoginActivity.class);
+        startActivity(i);
     }
 
     private interface ProfileQuery {
