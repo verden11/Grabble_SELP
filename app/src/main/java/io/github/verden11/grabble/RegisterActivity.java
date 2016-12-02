@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -288,7 +289,16 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            // TODO register user
+            // Create a new map of values, where column names are the keys
+            String mPasswordHash = Hashes.hashPassword(mEmail, mPassword);
+
+            ContentValues values = new ContentValues();
+            values.put(DbHelper.UsersEntry.COLUMN_NICKNAME, mNickname);
+            values.put(DbHelper.UsersEntry.COLUMN_EMAIL, mEmail);
+            values.put(DbHelper.UsersEntry.COLUMN_PASSWORD, mPasswordHash);
+
+            // Insert the new row, returning the primary key value of the new row
+            db.insert(DbHelper.UsersEntry.TABLE_NAME, null, values);
 
 
             return false;
