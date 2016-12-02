@@ -10,7 +10,7 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper {
     private static final String TAG = "DbHelperTAG";
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "Grabble.db";
 
 
@@ -51,7 +51,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     UsersEntry._ID + " INTEGER PRIMARY KEY," +
                     UsersEntry.COLUMN_NICKNAME + TEXT_TYPE + NOT_NULL + UNIQUE + COMMA_SEP +
                     UsersEntry.COLUMN_EMAIL + TEXT_TYPE + NOT_NULL + UNIQUE + COMMA_SEP +
-                    UsersEntry.COLUMN_PASSWORD + NOT_NULL + TEXT_TYPE + " )";
+                    UsersEntry.COLUMN_PASSWORD + TEXT_TYPE + NOT_NULL + " )";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + UsersEntry.TABLE_NAME;
