@@ -125,7 +125,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             mNicknameView.setError(getString(R.string.error_field_required));
             focusView = mNicknameView;
             cancel = true;
-        } else if (isNicknameTaken()) {
+        } else if (isNicknameTaken(nickname)) {
             mNicknameView.setError(getString(R.string.error_nickname_taken));
             focusView = mNicknameView;
             cancel = true;
@@ -151,7 +151,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
-        } else if (isEmailTaken()) {
+        } else if (isEmailTaken(email)) {
             mEmailView.setError(getString(R.string.error_email_taken));
             focusView = mEmailView;
             cancel = true;
@@ -309,7 +309,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             db.insert(DbHelper.UsersEntry.TABLE_NAME, null, values);
 
 
-            return false;
+            return true;
         }
 
         @Override
@@ -332,12 +332,28 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         }
     }
 
-    private boolean isNicknameTaken() {
-        return true;
+    private boolean isNicknameTaken(String nickname) {
+        // check if user email exists in database
+        Cursor c = db.rawQuery("SELECT count(1) FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry.COLUMN_NICKNAME + " = '" + nickname + "'", null);
+        c.moveToFirst();
+        int count = c.getInt(0);
+        c.close();
+        if (count == 1) {
+            return true;
+        }
+        return false;
     }
 
-    private boolean isEmailTaken() {
-        return true;
+    private boolean isEmailTaken(String email) {
+        // check if user email exists in database
+        Cursor c = db.rawQuery("SELECT count(1) FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry.COLUMN_EMAIL + " = '" + email + "'", null);
+        c.moveToFirst();
+        int count = c.getInt(0);
+        c.close();
+        if (count == 1) {
+            return true;
+        }
+        return false;
     }
 }
 
