@@ -344,25 +344,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            // concatinate password with email to ensure unique passwords (as emails must be unique)
-            String mPasswordHash = mPassword + mEmail;
-            mPasswordHash = Hashes.md5(mPasswordHash);
-            mPasswordHash = Hashes.sha1(mPasswordHash);
 
+            String mPasswordHash = Hashes.hashPassword(mEmail, mPassword);
             // find check if user details exists in database
-            Cursor c = db.rawQuery("SELECT count(1) FROM users WHERE email = '" + mEmail +
-                    "' AND password = '" + mPassword + "'", null);
+            Cursor c = db.rawQuery("SELECT count(1) FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry.COLUMN_EMAIL + " = '" + mEmail +
+                    "' AND " + DbHelper.UsersEntry.COLUMN_PASSWORD + " = '" + mPasswordHash + "'", null);
             c.moveToFirst();
-            //
             int count = c.getInt(0);
             c.close();
             if (count == 1) {
                 // details match
                 return true;
             }
-
-
-            // TODO: register the new account
             return false;
         }
 
