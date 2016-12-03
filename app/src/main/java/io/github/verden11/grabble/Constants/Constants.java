@@ -4,6 +4,11 @@ package io.github.verden11.grabble.Constants;
 public class Constants {
 
     /**
+     * Constants for passing variables using intents
+     */
+    public static final String USER_EMAIL = "user_email";
+
+    /**
      * Constants for permission checks
      */
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 7001;

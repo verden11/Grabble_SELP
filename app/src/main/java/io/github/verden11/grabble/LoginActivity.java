@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.DbHelper;
 import io.github.verden11.grabble.Helper.Hashes;
 import io.github.verden11.grabble.Helper.Validate;
@@ -183,9 +184,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void openMapsActivity() {
+    public void openMapsActivity(String mEmail) {
         Log.d(TAG, "openMapsActivity");
         Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra(Constants.USER_EMAIL, mEmail);
         startActivity(intent);
     }
 
@@ -250,7 +252,7 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                openMapsActivity();
+                openMapsActivity(mEmail);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
