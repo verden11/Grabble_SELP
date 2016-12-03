@@ -244,7 +244,6 @@ public class RegisterActivity extends AppCompatActivity {
             ContentValues valuesStats = new ContentValues();
             valuesStats.put(DbHelper.Stats.COLUMN_USER_ID, rowID);
             valuesStats.put(DbHelper.Stats.COLUMN_DISTANCE_WALKED, 0);
-            valuesStats.put(DbHelper.Stats.COLUMN_LETTERS, "");
             valuesStats.put(DbHelper.Stats.COLUMN_WORDS, "");
             valuesStats.put(DbHelper.Stats.COLUMN_SCORE, 0);
 

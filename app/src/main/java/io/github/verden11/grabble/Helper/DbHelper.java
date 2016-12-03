@@ -10,7 +10,7 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper {
     private static final String TAG = "DbHelperTAG";
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "Grabble.db";
 
 
@@ -26,10 +26,41 @@ public class DbHelper extends SQLiteOpenHelper {
     public static class Stats implements BaseColumns {
         public static final String TABLE_NAME = "statistics";
         public static final String COLUMN_USER_ID = "user_id";
-        public static final String COLUMN_LETTERS = "letters";
         public static final String COLUMN_WORDS = "words";
         public static final String COLUMN_DISTANCE_WALKED = "distance";
         public static final String COLUMN_SCORE = "score";
+
+        public static final String COLUMN_LETTER_A = "A";
+        public static final String COLUMN_LETTER_B = "B";
+        public static final String COLUMN_LETTER_C = "C";
+        public static final String COLUMN_LETTER_D = "D";
+        public static final String COLUMN_LETTER_E = "E";
+
+        public static final String COLUMN_LETTER_F = "F";
+        public static final String COLUMN_LETTER_G = "G";
+        public static final String COLUMN_LETTER_H = "H";
+        public static final String COLUMN_LETTER_I = "I";
+        public static final String COLUMN_LETTER_J = "J";
+
+        public static final String COLUMN_LETTER_K = "K";
+        public static final String COLUMN_LETTER_L = "L";
+        public static final String COLUMN_LETTER_M = "M";
+        public static final String COLUMN_LETTER_N = "N";
+        public static final String COLUMN_LETTER_O = "O";
+
+        public static final String COLUMN_LETTER_P = "P";
+        public static final String COLUMN_LETTER_Q = "Q";
+        public static final String COLUMN_LETTER_R = "R";
+        public static final String COLUMN_LETTER_S = "S";
+        public static final String COLUMN_LETTER_T = "T";
+
+        public static final String COLUMN_LETTER_U = "U";
+        public static final String COLUMN_LETTER_V = "V";
+        public static final String COLUMN_LETTER_W = "W";
+        public static final String COLUMN_LETTER_X = "X";
+        public static final String COLUMN_LETTER_Y = "Y";
+        public static final String COLUMN_LETTER_Z = "Z";
+
     }
 
 
@@ -59,15 +90,46 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String INT_TYPE = " INT";
     private static final String UNIQUE = " UNIQUE";
     private static final String NOT_NULL = " NOT NULL";
+    private static final String DEFAULT_0 = " DEFAULT 0";
     private static final String COMMA_SEP = ",";
 
     private static final String SQL_CREATE_STATS =
             "CREATE TABLE " + Stats.TABLE_NAME + " (" +
                     Stats.COLUMN_USER_ID + " INTEGER PRIMARY KEY REFERENCES " + UsersEntry.TABLE_NAME + "(" + UsersEntry._ID + ")," +
-                    Stats.COLUMN_LETTERS + TEXT_TYPE + COMMA_SEP +
                     Stats.COLUMN_WORDS + TEXT_TYPE + COMMA_SEP +
                     Stats.COLUMN_DISTANCE_WALKED + DECIMAL_TYPE + COMMA_SEP +
-                    Stats.COLUMN_SCORE + INT_TYPE + " DEFAULT 0" + " )";
+                    Stats.COLUMN_SCORE + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_A + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_B + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_C + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_D + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_E + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+
+                    Stats.COLUMN_LETTER_F + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_G + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_H + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_I + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_J + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+
+                    Stats.COLUMN_LETTER_K + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_L + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_M + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_N + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_O + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+
+                    Stats.COLUMN_LETTER_P + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_Q + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_R + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_S + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_T + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+
+                    Stats.COLUMN_LETTER_U + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_V + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_W + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_X + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_Y + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTER_Z + INT_TYPE + DEFAULT_0 +
+                    " )";
 
 
     private static final String SQL_CREATE_ENTRIES =
