@@ -231,13 +231,22 @@ public class RegisterActivity extends AppCompatActivity {
             // Create a new map of values, where column names are the keys
             String mPasswordHash = Hashes.hashPassword(mEmail, mPassword);
 
-            ContentValues values = new ContentValues();
-            values.put(DbHelper.UsersEntry.COLUMN_NICKNAME, mNickname);
-            values.put(DbHelper.UsersEntry.COLUMN_EMAIL, mEmail);
-            values.put(DbHelper.UsersEntry.COLUMN_PASSWORD, mPasswordHash);
+            ContentValues valuesUser = new ContentValues();
+            valuesUser.put(DbHelper.UsersEntry.COLUMN_NICKNAME, mNickname);
+            valuesUser.put(DbHelper.UsersEntry.COLUMN_EMAIL, mEmail);
+            valuesUser.put(DbHelper.UsersEntry.COLUMN_PASSWORD, mPasswordHash);
 
             // Insert the new row, returning the primary key value of the new row
-            db.insert(DbHelper.UsersEntry.TABLE_NAME, null, values);
+            long rowID = db.insert(DbHelper.UsersEntry.TABLE_NAME, null, valuesUser);
+
+            ContentValues valuesStats = new ContentValues();
+            valuesStats.put(DbHelper.Stats.COLUMN_USER_ID, rowID);
+            valuesStats.put(DbHelper.Stats.COLUMN_DISTANCE_WALKED, 0);
+            valuesStats.put(DbHelper.Stats.COLUMN_LETTERS, "");
+            valuesStats.put(DbHelper.Stats.COLUMN_WORDS, "");
+            valuesStats.put(DbHelper.Stats.COLUMN_SCORE, 0);
+
+            db.insert(DbHelper.Stats.TABLE_NAME, null, valuesStats);
 
 
             return true;
