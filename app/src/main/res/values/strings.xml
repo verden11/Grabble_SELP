@@ -63,4 +63,12 @@
     <string name="letter_Y">Y</string>
     <string name="letter_Z">Z</string>
 
+    <!-- Strings for Register Activity-->
+    <string name="title_activity_register">Register</string>
+    <string name="register_and_login">Register &amp; Login</string>
+    <string name="prompt_nickname">Nickname</string>
+    <string name="error_nickname_taken">This nickname is already taken</string>
+    <string name="error_email_taken">This email is already registered</string>
+
+
 </resources>
