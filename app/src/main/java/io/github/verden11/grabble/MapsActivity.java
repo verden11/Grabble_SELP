@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -50,7 +51,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import io.github.verden11.grabble.Constants.Constants;
+import io.github.verden11.grabble.Helper.DbHelper;
 import io.github.verden11.grabble.Helper.PermissionHelper;
+import io.github.verden11.grabble.Helper.Queries;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     // Keys for storing activity state in the Bundle.
@@ -58,6 +61,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected final static String LOCATION_KEY = "location-key";
     protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
     private final String TAG = "MapsActivity";
+    private SQLiteDatabase db;
+    private String user_email;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -91,6 +96,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_maps);
+
+        // get the intent which started this activity
+        Intent intent = getIntent();
+        user_email = intent.getStringExtra(Constants.USER_EMAIL);
+
+        // get SQLite
+        DbHelper mDbHelper = new DbHelper(this);
+        // Gets the data repository in write mode
+        db = mDbHelper.getWritableDatabase();
 
         thisActivity = this;
 
@@ -321,6 +335,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //stop location updates when Activity is no longer active
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
+        }
+
+        if (!collected_chars.isEmpty()) {
+            int user_id = Queries.getIdByEmail(thisActivity, user_email);
+            for (char ch : collected_chars) {
+                Queries.addChar(thisActivity, user_id, ch);
+            }
         }
     }
 
