@@ -30,6 +30,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -264,7 +265,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             collected_chars.add(letter.charAt(0));
                             collected_here.add(marker);
                             // remove current marker for the collected letter
-                            marker.remove();
+                            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                             Log.d(TAG, "letter " + letter + " pos " + marker.getId());
                         }
                     } else {
