@@ -7,6 +7,7 @@ public class Constants {
      * Constants for passing variables using intents
      */
     public static final String USER_EMAIL = "user_email";
+    public static final String USER_ID = "user_id";
 
     /**
      * Constants for permission checks

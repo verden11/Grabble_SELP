@@ -26,6 +26,7 @@ import android.widget.TextView;
 import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.DbHelper;
 import io.github.verden11.grabble.Helper.Hashes;
+import io.github.verden11.grabble.Helper.Queries;
 import io.github.verden11.grabble.Helper.Validate;
 
 /**
@@ -187,7 +188,8 @@ public class LoginActivity extends AppCompatActivity {
     public void openMapsActivity(String mEmail) {
         Log.d(TAG, "openMapsActivity");
         Intent intent = new Intent(this, MapsActivity.class);
-        intent.putExtra(Constants.USER_EMAIL, mEmail);
+        int user_id = Queries.getIdByEmail(this, mEmail);
+        intent.putExtra(Constants.USER_ID, user_id);
         startActivity(intent);
     }
 
