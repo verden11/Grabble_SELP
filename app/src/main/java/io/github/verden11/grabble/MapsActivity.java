@@ -46,6 +46,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -207,14 +208,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
+        long epochTime = Queries.getLastKMLDownloadTime(thisActivity, user_id);
+        Date LastKmlDownloadDate = new Date(epochTime);
+
+
         // Get day of the week
         Calendar sCalendar = Calendar.getInstance();
-        String dayLongName = sCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()).toLowerCase();
+        long epochTimeNow = sCalendar.getTimeInMillis();
+        epochTimeNow = epochTimeNow - (epochTimeNow % 86400000L);
+        Date dateNow = new Date(epochTimeNow);
 
-        // Download kml data for `today` - day of the week
-        String fullUrl = "http://www.inf.ed.ac.uk/teaching/courses/selp/coursework/" + dayLongName + ".kml";
-        DownloadTask task = new DownloadTask();
-        task.execute(fullUrl);
+        if (!LastKmlDownloadDate.equals(dateNow)) {
+            // Download KML only if it was not downloaded today
+            String dayLongName = sCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault()).toLowerCase();
+
+            // Download kml data for `today` - day of the week
+            String fullUrl = "http://www.inf.ed.ac.uk/teaching/courses/selp/coursework/" + dayLongName + ".kml";
+            DownloadTask task = new DownloadTask();
+            task.execute(fullUrl);
+        }
 
 
     }
@@ -574,6 +586,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // save time stamp of 'last KML download time
             Calendar sCalendar = Calendar.getInstance();
             long epoch = sCalendar.getTimeInMillis();
+            // save only date (no hours/minutes/seconds needed)
+            epoch = epoch - (epoch % 86400000L);
             ContentValues cv = new ContentValues();
             cv.put(DbHelper.UsersEntry.COLUMN_LAST_KML_DOWNLOAD_DATE, epoch);
             db.update(DbHelper.UsersEntry.TABLE_NAME, cv, "_id = " + user_id, null);
