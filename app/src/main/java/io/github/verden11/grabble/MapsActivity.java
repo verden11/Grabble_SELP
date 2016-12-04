@@ -249,67 +249,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double myLng = mCurrentLocation.getLongitude();
         Log.i(TAG, myLat + "");
         Log.i(TAG, myLng + "");
-        if (mMap != null) {
 
-
-            // remove old circle around users location
-            if (circle != null) {
-                circle.remove();
-            }
-
-            CircleOptions circleOptions = new CircleOptions()
-                    .center(new LatLng(myLat, myLng))
-                    .radius(Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE)
-                    .strokeWidth(2)
-                    .strokeColor(Color.BLUE)
-                    .fillColor(Color.argb(60, 0, 0, 128));
-            circle = mMap.addCircle(circleOptions);
-
-
-            // check if there are any letter nearby to collect
-            if (kmlMarkers.size() > 0) {
-                ArrayList<Marker> collected_here = new ArrayList<>();
-                for (Marker marker : kmlMarkers) {
-                    LatLng pos = marker.getPosition();
-                    String letter = marker.getTitle();
-
-                    // create a Location object of a letter placemark
-                    Location loc = new Location(letter);
-                    loc.setLatitude(pos.latitude);
-                    loc.setLongitude(pos.longitude);
-
-                    // Distance from users location to a placemark
-                    float distance = mCurrentLocation.distanceTo(loc);
-
-
-                    // check if marker is within the distance to be viable
-                    if (distance <= Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE) {
-                        marker.setVisible(true);
-                        // check if letter is within the distance
-                        if (mCurrentLocation.distanceTo(loc) <= Constants.MAX_DISTANCE_TO_COLLECT_LETTER) {
-                            Snackbar.make(rootView, letter + " Collected", Snackbar.LENGTH_SHORT).show();
-                            collected_chars.add(letter.charAt(0));
-                            collected_here.add(marker);
-
-                            // remove current marker for the collected letter
-                            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                            Log.d(TAG, "letter " + letter + " pos " + marker.getId());
-                        }
-                    } else {
-                        marker.setVisible(false);
-                    }
-
-
-                }
-
-                //remove all collected letters
-                kmlMarkers.removeAll(collected_here);
-                Log.d(TAG, " remaining : " + kmlMarkers.size() + "\n Collected: \n" + collected_chars.toString());
-
-
-            }
+        if (mMap == null) {
+            return;
         }
 
+
+        // remove old circle around users location
+        if (circle != null) {
+            circle.remove();
+        }
+
+        CircleOptions circleOptions = new CircleOptions()
+                .center(new LatLng(myLat, myLng))
+                .radius(Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE)
+                .strokeWidth(2)
+                .strokeColor(Color.BLUE)
+                .fillColor(Color.argb(60, 0, 0, 128));
+        circle = mMap.addCircle(circleOptions);
+
+
+        // check if there are any letter nearby to collect
+        if (kmlMarkers.size() > 0) {
+            ArrayList<Marker> collected_here = new ArrayList<>();
+            for (Marker marker : kmlMarkers) {
+                LatLng pos = marker.getPosition();
+                String letter = marker.getTitle();
+
+                // create a Location object of a letter placemark
+                Location loc = new Location(letter);
+                loc.setLatitude(pos.latitude);
+                loc.setLongitude(pos.longitude);
+
+                // Distance from users location to a placemark
+                float distance = mCurrentLocation.distanceTo(loc);
+
+
+                // check if marker is within the distance to be viable
+                if (distance <= Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE) {
+                    marker.setVisible(true);
+                    // check if letter is within the distance
+                    if (mCurrentLocation.distanceTo(loc) <= Constants.MAX_DISTANCE_TO_COLLECT_LETTER) {
+                        Snackbar.make(rootView, letter + " Collected", Snackbar.LENGTH_SHORT).show();
+                        collected_chars.add(letter.charAt(0));
+                        collected_here.add(marker);
+
+                        // remove current marker for the collected letter
+                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                        Log.d(TAG, "letter " + letter + " pos " + marker.getId());
+                    }
+                } else {
+                    marker.setVisible(false);
+                }
+
+
+            }
+
+            //remove all collected letters
+            kmlMarkers.removeAll(collected_here);
+            Log.d(TAG, " remaining : " + kmlMarkers.size() + "\n Collected: \n" + collected_chars.toString());
+
+
+        }
     }
 
 
@@ -560,9 +561,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     double latPlace = Double.parseDouble(latlngStr[0]);
                     double lngPlace = Double.parseDouble(latlngStr[1]);
                     LatLng latLng = new LatLng(latPlace, lngPlace);
-                    Location loc = new Location("");
-                    loc.setLatitude(latLng.latitude);
-                    loc.setLongitude(latLng.longitude);
 
 
                     // draw maker on the map
@@ -573,13 +571,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     // populate array list
                     kmlMarkers.add(m);
 
-                    if (mCurrentLocation != null) {
-                        float distance = mCurrentLocation.distanceTo(loc);
-                        if (distance <= Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE) {
-                            m.setVisible(true);
-                        }
-                    }
+
                 }
+                if (mCurrentLocation != null) {
+                    updateUI();
+                }
+
+
             }
 
 
