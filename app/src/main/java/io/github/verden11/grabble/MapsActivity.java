@@ -566,6 +566,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 }
             }
+
+
+            // save time stamp of 'last KML download time
+            Calendar sCalendar = Calendar.getInstance();
+            long epoc = sCalendar.getTimeInMillis();
+
+            ContentValues cv = new ContentValues();
+            cv.put(DbHelper.UsersEntry.COLUMN_LAST_KML_DOWNLOAD_DATE, epoc);
+            db.update(DbHelper.UsersEntry.TABLE_NAME, cv, "_id = " + user_id, null);
         }
     }
 }
