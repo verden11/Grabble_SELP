@@ -2,6 +2,7 @@ package io.github.verden11.grabble;
 
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -62,7 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
     private final String TAG = "MapsActivity";
     private SQLiteDatabase db;
-    private String user_email;
+    private int user_id;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -96,17 +97,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_maps);
+        thisActivity = this;
 
         // get the intent which started this activity
         Intent intent = getIntent();
-        user_email = intent.getStringExtra(Constants.USER_EMAIL);
+        user_id = intent.getIntExtra(Constants.USER_ID, 0);
 
         // get SQLite
         DbHelper mDbHelper = new DbHelper(this);
         // Gets the data repository in write mode
         db = mDbHelper.getWritableDatabase();
 
-        thisActivity = this;
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PermissionHelper.checkLocationPermission(thisActivity);
@@ -274,10 +275,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         marker.setVisible(true);
                         // check if letter is within the distance
                         if (mCurrentLocation.distanceTo(loc) <= Constants.MAX_DISTANCE_TO_COLLECT_LETTER) {
-                            Snackbar snackbar = Snackbar.make(rootView, letter + " Collected", Snackbar.LENGTH_SHORT);
-                            snackbar.show();
+                            Snackbar.make(rootView, letter + " Collected", Snackbar.LENGTH_SHORT).show();
                             collected_chars.add(letter.charAt(0));
                             collected_here.add(marker);
+
                             // remove current marker for the collected letter
                             marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                             Log.d(TAG, "letter " + letter + " pos " + marker.getId());
@@ -337,17 +338,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             stopLocationUpdates();
         }
 
-        if (!collected_chars.isEmpty()) {
-            int user_id = Queries.getIdByEmail(thisActivity, user_email);
-            for (char ch : collected_chars) {
-                Queries.addChar(thisActivity, user_id, ch);
-            }
-        }
+
     }
 
     protected void stopLocationUpdates() {
         Log.d(TAG, "stopLocationUpdates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        if (!collected_chars.isEmpty()) {
+            for (char ch : collected_chars) {
+                Queries.addChar(thisActivity, user_id, ch);
+            }
+            // clear list as all data was saved in DB
+            collected_chars.clear();
+        }
     }
 
     protected void createLocationRequest() {
