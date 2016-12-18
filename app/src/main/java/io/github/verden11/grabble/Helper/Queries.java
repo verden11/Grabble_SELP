@@ -50,7 +50,9 @@ public class Queries {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT " + DbHelper.UsersEntry.COLUMN_LAST_KML_DOWNLOAD_DATE + " FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry._ID + " = " + user_id + ";", null);
         c.moveToFirst();
-        long epochTime = Long.valueOf(c.getString(0));
+        // entry does not exist
+        long epochTime = c.getLong(0);
+        c.close();
         return epochTime;
     }
 
