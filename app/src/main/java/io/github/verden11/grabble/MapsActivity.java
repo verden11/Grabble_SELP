@@ -104,10 +104,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = getIntent();
         user_id = intent.getIntExtra(Constants.USER_ID, 0);
 
-        // get SQLite
-        DbHelper mDbHelper = new DbHelper(this);
-        // Gets the data repository in write mode
-        db = mDbHelper.getWritableDatabase();
 
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -584,11 +580,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // save time stamp of 'last KML download time
             Calendar sCalendar = Calendar.getInstance();
             long epoch = sCalendar.getTimeInMillis();
-            // save only date (no hours/minutes/seconds needed)
+            // get only date (no hours/minutes/seconds needed)
             epoch = epoch - (epoch % 86400000L);
-            ContentValues cv = new ContentValues();
-            cv.put(DbHelper.UsersEntry.COLUMN_LAST_KML_DOWNLOAD_DATE, epoch);
-            db.update(DbHelper.UsersEntry.TABLE_NAME, cv, "_id = " + user_id, null);
+
+
+            Queries.saveKMLDownloadTime(thisActivity, user_id, epoch);
+            Queries.saveKML(thisActivity, user_id, kmlMarkers);
         }
     }
 }

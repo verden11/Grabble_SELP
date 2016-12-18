@@ -3,10 +3,9 @@ package io.github.verden11.grabble;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,7 +33,7 @@ import io.github.verden11.grabble.Helper.Validate;
  */
 public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LoginActivityTAG";
-    private SQLiteDatabase db;
+    Activity thisActivity;
 
 
     /**
@@ -53,12 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Log.d(TAG, "onCreate");
-
-        // get SQLite
-        DbHelper mDbHelper = new DbHelper(this);
-        // Gets the data repository in write mode
-        db = mDbHelper.getWritableDatabase();
-
+        thisActivity = this;
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -236,16 +230,8 @@ public class LoginActivity extends AppCompatActivity {
 
             String mPasswordHash = Hashes.hashPassword(mEmail, mPassword);
             // find check if user details exists in database
-            Cursor c = db.rawQuery("SELECT count(1) FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry.COLUMN_EMAIL + " = '" + mEmail +
-                    "' AND " + DbHelper.UsersEntry.COLUMN_PASSWORD + " = '" + mPasswordHash + "'", null);
-            c.moveToFirst();
-            int count = c.getInt(0);
-            c.close();
-            if (count == 1) {
-                // details match
-                return true;
-            }
-            return false;
+            return Queries.tryLogin(thisActivity, mEmail, mPasswordHash);
+
         }
 
         @Override

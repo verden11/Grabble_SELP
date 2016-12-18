@@ -6,14 +6,103 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
+
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
 public class Queries {
-//    private SQLiteDatabase db;
+
+    /**
+     * Login Activity
+     */
+
+    public static boolean tryLogin(Activity activity, String email, String password) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        int found = 0;
+        Cursor c = db.rawQuery(
+                "SELECT count(1) " +
+                        "FROM " + DbHelper.UsersEntry.TABLE_NAME +
+                        " WHERE " + DbHelper.UsersEntry.COLUMN_EMAIL + " = '" + email + "'" +
+                        " AND " + DbHelper.UsersEntry.COLUMN_PASSWORD + " = '" + password + "'", null);
+        try {
+            c.moveToFirst();
+            found = c.getInt(0);
+        } finally {
+            c.close();
+            db.close();
+        }
+
+        return found == 1;
+    }
+
+    /*
+     * Register Activity
+     */
+
+    public static void registerUser(Activity activity, String nickname, String email, String password) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        try {
+            ContentValues valuesUser = new ContentValues();
+            valuesUser.put(DbHelper.UsersEntry.COLUMN_NICKNAME, nickname);
+            valuesUser.put(DbHelper.UsersEntry.COLUMN_EMAIL, email);
+            valuesUser.put(DbHelper.UsersEntry.COLUMN_PASSWORD, password);
+            // Insert the new row, returning the primary key value of the new row
+            long rowID = db.insert(DbHelper.UsersEntry.TABLE_NAME, null, valuesUser);
+
+            ContentValues valuesStats = new ContentValues();
+            valuesStats.put(DbHelper.Stats.COLUMN_USER_ID, rowID);
+            valuesStats.put(DbHelper.Stats.COLUMN_DISTANCE_WALKED, 0);
+            valuesStats.put(DbHelper.Stats.COLUMN_WORDS, "");
+            valuesStats.put(DbHelper.Stats.COLUMN_SCORE, 0);
+            db.insert(DbHelper.Stats.TABLE_NAME, null, valuesStats);
+        } finally {
+            db.close();
+        }
+    }
+
+    public static boolean isNicknameTaken(Activity activity, String nickname) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT count(1) FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry.COLUMN_NICKNAME + " = '" + nickname + "'", null);
+        int found = 0;
+        try {
+            c.moveToFirst();
+            found = c.getInt(0);
+        } finally {
+            c.close();
+        }
+
+        return found == 1;
+    }
+
+    public static boolean isEmailTaken(Activity activity, String email) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT count(1) FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry.COLUMN_EMAIL + " = '" + email + "'", null);
+        int found = 0;
+        try {
+            c.moveToFirst();
+            found = c.getInt(0);
+
+        } finally {
+            c.close();
+            db.close();
+        }
+        return found == 1;
+    }
+
 
     public static int getIdByEmail(Activity activity, String email) {
         DbHelper mDbHelper = new DbHelper(activity);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT " + DbHelper.UsersEntry._ID + " FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry.COLUMN_EMAIL + " = '" + email + "';", null);
-        ;
+        Cursor c = db.rawQuery(
+                "SELECT " + DbHelper.UsersEntry._ID +
+                        " FROM " + DbHelper.UsersEntry.TABLE_NAME +
+                        " WHERE " + DbHelper.UsersEntry.COLUMN_EMAIL + " = '" + email + "';", null);
         int user_id;
         try {
             c.moveToFirst();
@@ -46,7 +135,10 @@ public class Queries {
         DbHelper mDbHelper = new DbHelper(activity);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         ch = Character.toUpperCase(ch);
-        Cursor c = db.rawQuery("SELECT " + ch + " FROM " + DbHelper.Stats.TABLE_NAME + " WHERE " + DbHelper.Stats.COLUMN_USER_ID + " = " + user_id + ";", null);
+        Cursor c = db.rawQuery(
+                "SELECT " + ch +
+                        " FROM " + DbHelper.Stats.TABLE_NAME +
+                        " WHERE " + DbHelper.Stats.COLUMN_USER_ID + " = " + user_id + ";", null);
         int count;
         try {
             c.moveToFirst();
@@ -61,7 +153,10 @@ public class Queries {
     public static long getLastKMLDownloadTime(Activity activity, int user_id) {
         DbHelper mDbHelper = new DbHelper(activity);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT " + DbHelper.UsersEntry.COLUMN_LAST_KML_DOWNLOAD_DATE + " FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry._ID + " = " + user_id + ";", null);
+        Cursor c = db.rawQuery(
+                "SELECT " + DbHelper.UsersEntry.COLUMN_LAST_KML_DOWNLOAD_DATE +
+                        " FROM " + DbHelper.UsersEntry.TABLE_NAME +
+                        " WHERE " + DbHelper.UsersEntry._ID + " = " + user_id + ";", null);
         long epochTime;
         try {
             c.moveToFirst();
@@ -73,9 +168,28 @@ public class Queries {
         return epochTime;
     }
 
-    public static void saveKML(Activity activity, int user_id) {
+    public static void saveKML(Activity activity, int user_id, ArrayList<Marker> markers) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put(DbHelper.UsersEntry.COLUMN_KML_LIST, "hello");
+            db.update(DbHelper.UsersEntry.TABLE_NAME, cv, "_id = " + user_id, null);
+        } finally {
+            db.close();
+        }
+    }
 
-
+    public static void saveKMLDownloadTime(Activity activity, int user_id, long epochTime) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put(DbHelper.UsersEntry.COLUMN_LAST_KML_DOWNLOAD_DATE, epochTime);
+            db.update(DbHelper.UsersEntry.TABLE_NAME, cv, "_id = " + user_id, null);
+        } finally {
+            db.close();
+        }
     }
 
 

@@ -3,10 +3,8 @@ package io.github.verden11.grabble;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.ContentValues;
+import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +19,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import io.github.verden11.grabble.Constants.Constants;
-import io.github.verden11.grabble.Helper.DbHelper;
 import io.github.verden11.grabble.Helper.Hashes;
 import io.github.verden11.grabble.Helper.Queries;
 import io.github.verden11.grabble.Helper.Validate;
@@ -31,7 +28,7 @@ import io.github.verden11.grabble.Helper.Validate;
  */
 public class RegisterActivity extends AppCompatActivity {
     private final String TAG = "RegisterActivityTAG";
-    private SQLiteDatabase db;
+    Activity thisActivity;
 
 
     /**
@@ -51,11 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        // get SQLite
-        DbHelper mDbHelper = new DbHelper(this);
-        // Gets the data repository in write mode
-        db = mDbHelper.getWritableDatabase();
+        thisActivity = this;
 
 
         // Set up the login form.
@@ -114,7 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
             mNicknameView.setError(getString(R.string.error_field_required));
             focusView = mNicknameView;
             cancel = true;
-        } else if (isNicknameTaken(nickname)) {
+        } else if (Queries.isNicknameTaken(thisActivity, nickname)) {
             mNicknameView.setError(getString(R.string.error_nickname_taken));
             focusView = mNicknameView;
             cancel = true;
@@ -140,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
-        } else if (isEmailTaken(email)) {
+        } else if (Queries.isEmailTaken(thisActivity, email)) {
             mEmailView.setError(getString(R.string.error_email_taken));
             focusView = mEmailView;
             cancel = true;
@@ -233,21 +226,7 @@ public class RegisterActivity extends AppCompatActivity {
             // Create a new map of values, where column names are the keys
             String mPasswordHash = Hashes.hashPassword(mEmail, mPassword);
 
-            ContentValues valuesUser = new ContentValues();
-            valuesUser.put(DbHelper.UsersEntry.COLUMN_NICKNAME, mNickname);
-            valuesUser.put(DbHelper.UsersEntry.COLUMN_EMAIL, mEmail);
-            valuesUser.put(DbHelper.UsersEntry.COLUMN_PASSWORD, mPasswordHash);
-
-            // Insert the new row, returning the primary key value of the new row
-            long rowID = db.insert(DbHelper.UsersEntry.TABLE_NAME, null, valuesUser);
-
-            ContentValues valuesStats = new ContentValues();
-            valuesStats.put(DbHelper.Stats.COLUMN_USER_ID, rowID);
-            valuesStats.put(DbHelper.Stats.COLUMN_DISTANCE_WALKED, 0);
-            valuesStats.put(DbHelper.Stats.COLUMN_WORDS, "");
-            valuesStats.put(DbHelper.Stats.COLUMN_SCORE, 0);
-
-            db.insert(DbHelper.Stats.TABLE_NAME, null, valuesStats);
+            Queries.registerUser(thisActivity, mNickname, mEmail, mPasswordHash);
 
 
             return true;
@@ -273,28 +252,5 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isNicknameTaken(String nickname) {
-        // check if user email exists in database
-        Cursor c = db.rawQuery("SELECT count(1) FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry.COLUMN_NICKNAME + " = '" + nickname + "'", null);
-        c.moveToFirst();
-        int count = c.getInt(0);
-        c.close();
-        if (count == 1) {
-            return true;
-        }
-        return false;
-    }
 
-    private boolean isEmailTaken(String email) {
-        // check if user email exists in database
-        Cursor c = db.rawQuery("SELECT count(1) FROM " + DbHelper.UsersEntry.TABLE_NAME + " WHERE " + DbHelper.UsersEntry.COLUMN_EMAIL + " = '" + email + "'", null);
-        c.moveToFirst();
-        int count = c.getInt(0);
-        c.close();
-        if (count == 1) {
-            return true;
-        }
-        return false;
-    }
 }
-
