@@ -110,8 +110,6 @@ public class RegisterActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-        // TODO check if nickname is taken
-        // Check if nickname is valid
         if (TextUtils.isEmpty(nickname)) {
             mNicknameView.setError(getString(R.string.error_field_required));
             focusView = mNicknameView;
