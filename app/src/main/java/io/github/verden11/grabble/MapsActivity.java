@@ -2,7 +2,6 @@ package io.github.verden11.grabble;
 
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -46,7 +45,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,7 +52,6 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.verden11.grabble.Constants.Constants;
-import io.github.verden11.grabble.Helper.DbHelper;
 import io.github.verden11.grabble.Helper.PermissionHelper;
 import io.github.verden11.grabble.Helper.Queries;
 
@@ -104,7 +101,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // get the intent which started this activity
         Intent intent = getIntent();
         user_id = intent.getIntExtra(Constants.USER_ID, 0);
-
 
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
