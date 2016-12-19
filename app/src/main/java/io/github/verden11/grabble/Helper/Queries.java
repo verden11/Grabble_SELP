@@ -6,11 +6,22 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Queries {
 
@@ -168,16 +179,67 @@ public class Queries {
         return epochTime;
     }
 
-    public static void saveKML(Activity activity, int user_id, ArrayList<Marker> markers) {
+
+    public static void saveKML(Activity activity, int user_id, List<Marker> markers) {
         DbHelper mDbHelper = new DbHelper(activity);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
+        String json = "";
         try {
-            cv.put(DbHelper.UsersEntry.COLUMN_KML_LIST, "hello");
+            for (Marker m : markers) {
+                json += m.getPosition().toString();
+                json += m.getTitle();
+            }
+            cv.put(DbHelper.UsersEntry.COLUMN_KML_LIST, json);
             db.update(DbHelper.UsersEntry.TABLE_NAME, cv, "_id = " + user_id, null);
         } finally {
             db.close();
         }
+    }
+
+    public static List<Marker> loadKML(Activity activity, int user_id, GoogleMap mMap) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(
+                "SELECT " + DbHelper.UsersEntry.COLUMN_KML_LIST +
+                        " FROM " + DbHelper.UsersEntry.TABLE_NAME +
+                        " WHERE " + DbHelper.UsersEntry._ID + " = " + user_id + ";", null);
+        List<Marker> placemarks = new ArrayList<>();
+        try {
+            // get KML as String
+            c.moveToFirst();
+            String markersStr = c.getString(0);
+            // get coordinates using RegEx
+            Pattern r = Pattern.compile("(-\\d+|\\d+)\\.\\d+");
+            Matcher m = r.matcher(markersStr);
+            List<Float> allMatchesCoordinates = new ArrayList<>();
+            while (m.find()) {
+                allMatchesCoordinates.add(Float.parseFloat(m.group()));
+            }
+
+            // get letters using RegEx
+            String[] titles = markersStr.split("lat\\/lng: \\(\\d+\\.\\d+,(-\\d+|\\d+)\\.\\d+\\)");
+            int count = 0;
+
+            // add placemarks to the map
+            for (int i = 0; i < allMatchesCoordinates.size(); i += 2) {
+                count++;
+                LatLng latLng = new LatLng(allMatchesCoordinates.get(i), allMatchesCoordinates.get((i + 1)));
+                String title = titles[count];
+
+                // draw maker on the map
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(title)
+                        .visible(false));
+                // populate array list
+                placemarks.add(marker);
+            }
+        } finally {
+            c.close();
+            db.close();
+        }
+        return placemarks;
     }
 
     public static void saveKMLDownloadTime(Activity activity, int user_id, long epochTime) {
