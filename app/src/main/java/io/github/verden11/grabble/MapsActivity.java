@@ -50,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import io.github.verden11.grabble.Constants.Constants;
@@ -86,7 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Time when the location was updated represented as a String.
      */
     protected String mLastUpdateTime;
-    ArrayList<Marker> kmlMarkers;
+    List<Marker> kmlMarkers;
     View rootView;
     ArrayList<Character> collected_chars;
     Circle circle; // a circle with certain radius where placemarks become visible
@@ -267,7 +268,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // check if there are any letter nearby to collect
         if (kmlMarkers.size() > 0) {
-            ArrayList<Marker> collected_here = new ArrayList<>();
+            List<Marker> collected_here = new ArrayList<>();
             for (Marker marker : kmlMarkers) {
                 LatLng pos = marker.getPosition();
                 String letter = marker.getTitle();
