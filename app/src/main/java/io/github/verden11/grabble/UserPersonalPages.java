@@ -120,6 +120,7 @@ public class UserPersonalPages extends AppCompatActivity {
             }
         });
 
+
     }
 
 
@@ -130,6 +131,7 @@ public class UserPersonalPages extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_user_personal_pages, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -172,7 +174,14 @@ public class UserPersonalPages extends AppCompatActivity {
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
+
             return fragment;
+        }
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            Log.d(TAG, "onActivityCreated");
         }
 
         @Override
@@ -180,30 +189,42 @@ public class UserPersonalPages extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             int sectionNumb = getArguments().getInt(ARG_SECTION_NUMBER);
             Log.d(TAG, "onCreateView " + sectionNumb);
-            View rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+//            View rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
+//            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+//            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+//
+//            Button button = (Button) rootView.findViewById(R.id.b_first);
 
-            Button button = (Button) rootView.findViewById(R.id.b_first);
+            View rootView;
+
+
             switch (sectionNumb) {
+//                View rootView;
                 case 1:
                     Log.d(TAG, "onCreateView 1 in switch");
-                    button.setText("1");
+                    rootView = inflater.inflate(R.layout.fragment_user_personal_pages_1, container, false);
+                    populateKeyboard(rootView);
+
                     break;
                 case 2:
                     Log.d(TAG, "onCreateView 2 in switch");
-                    button.setText("2");
+                    rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
+//                    button.setText("2");
                     break;
                 case 3:
                     Log.d(TAG, "onCreateView 3 in switch");
-                    button.setText("3");
+                    rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
+//                    button.setText("3");
                     break;
                 default:
                     Log.d(TAG, "onCreateView default");
+                    rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
                     break;
             }
             return rootView;
         }
+
+
     }
 
     /**
