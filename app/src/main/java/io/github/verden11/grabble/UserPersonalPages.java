@@ -1,6 +1,9 @@
 package io.github.verden11.grabble;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -9,6 +12,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.SuperscriptSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,8 +26,47 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import io.github.verden11.grabble.Constants.Constants;
+import io.github.verden11.grabble.Helper.Queries;
+
 public class UserPersonalPages extends AppCompatActivity {
     private final static String TAG = "UserPersonalPages";
+    private static int user_id;
+    private static Activity thisActivity;
+
+    /**
+     * Declare variables for 'keyboard' buttons
+     * where all letters are displayed
+     */
+    // top row
+    static Button letter_q;
+    static Button letter_w;
+    static Button letter_e;
+    static Button letter_r;
+    static Button letter_t;
+    static Button letter_y;
+    static Button letter_u;
+    static Button letter_i;
+    static Button letter_o;
+    static Button letter_p;
+    // middle row
+    static Button letter_a;
+    static Button letter_s;
+    static Button letter_d;
+    static Button letter_f;
+    static Button letter_g;
+    static Button letter_h;
+    static Button letter_j;
+    static Button letter_k;
+    static Button letter_l;
+    // bottom row
+    static Button letter_z;
+    static Button letter_x;
+    static Button letter_c;
+    static Button letter_v;
+    static Button letter_b;
+    static Button letter_n;
+    static Button letter_m;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -42,6 +89,16 @@ public class UserPersonalPages extends AppCompatActivity {
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_user_personal_pages);
 
+        /**
+         * Init variables
+         */
+
+        thisActivity = this;
+        // get the intent which started this activity
+        Intent intent = getIntent();
+        user_id = intent.getIntExtra(Constants.USER_ID, 0);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -54,6 +111,7 @@ public class UserPersonalPages extends AppCompatActivity {
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        Log.d(TAG, "FAB button initialized");
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,4 +249,47 @@ public class UserPersonalPages extends AppCompatActivity {
             return null;
         }
     }
+
+
+    /**
+     * Helpers
+     */
+    private static void populateKeyboard(View view) {
+        // assign all keyboard buttons
+        letter_w = (Button) view.findViewById(R.id.b_letterW);
+        letter_e = (Button) view.findViewById(R.id.b_letterE);
+        letter_r = (Button) view.findViewById(R.id.b_letterR);
+        letter_t = (Button) view.findViewById(R.id.b_letterT);
+        letter_y = (Button) view.findViewById(R.id.b_letterY);
+        letter_u = (Button) view.findViewById(R.id.b_letterU);
+        letter_i = (Button) view.findViewById(R.id.b_letterI);
+        letter_o = (Button) view.findViewById(R.id.b_letterO);
+        letter_p = (Button) view.findViewById(R.id.b_letterP);
+
+        letter_a = (Button) view.findViewById(R.id.b_letterA);
+        letter_s = (Button) view.findViewById(R.id.b_letterS);
+        letter_d = (Button) view.findViewById(R.id.b_letterD);
+        letter_f = (Button) view.findViewById(R.id.b_letterF);
+        letter_g = (Button) view.findViewById(R.id.b_letterG);
+        letter_h = (Button) view.findViewById(R.id.b_letterH);
+        letter_j = (Button) view.findViewById(R.id.b_letterJ);
+        letter_k = (Button) view.findViewById(R.id.b_letterK);
+        letter_l = (Button) view.findViewById(R.id.b_letterL);
+
+        letter_z = (Button) view.findViewById(R.id.b_letterZ);
+        letter_x = (Button) view.findViewById(R.id.b_letterX);
+        letter_c = (Button) view.findViewById(R.id.b_letterC);
+        letter_v = (Button) view.findViewById(R.id.b_letterV);
+        letter_b = (Button) view.findViewById(R.id.b_letterB);
+        letter_n = (Button) view.findViewById(R.id.b_letterN);
+        letter_m = (Button) view.findViewById(R.id.b_letterM);
+
+        int countW = Queries.getCharCount(thisActivity, user_id, letter_w.getText().charAt(0));
+
+
+
+
+    }
+
+
 }
