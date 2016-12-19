@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import io.github.verden11.grabble.Constants.Constants;
-import io.github.verden11.grabble.Helper.DbHelper;
 import io.github.verden11.grabble.Helper.Hashes;
 import io.github.verden11.grabble.Helper.Queries;
 import io.github.verden11.grabble.Helper.Validate;
