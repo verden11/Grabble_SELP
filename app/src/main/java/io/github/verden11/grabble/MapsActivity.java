@@ -436,6 +436,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void goToPersonalPages(View view) {
         Log.d(TAG, "goToPersonalPages");
         Intent i = new Intent(this, UserPersonalPages.class);
+        i.putExtra(Constants.USER_ID, user_id);
         startActivity(i);
     }
 
