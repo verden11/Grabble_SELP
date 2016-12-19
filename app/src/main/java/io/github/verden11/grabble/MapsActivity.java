@@ -223,6 +223,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String fullUrl = "http://www.inf.ed.ac.uk/teaching/courses/selp/coursework/" + dayLongName + ".kml";
             DownloadTask task = new DownloadTask();
             task.execute(fullUrl);
+        } else {
+            kmlMarkers = Queries.loadKML(thisActivity, user_id, mMap);
+            if (mCurrentLocation != null) {
+                updateUI();
+            }
         }
 
 
@@ -361,6 +366,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // clear list as all data was saved in DB
             collected_chars.clear();
         }
+        Queries.saveKML(thisActivity, user_id, kmlMarkers);
     }
 
     protected void createLocationRequest() {
@@ -586,7 +592,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
             Queries.saveKMLDownloadTime(thisActivity, user_id, epoch);
-            Queries.saveKML(thisActivity, user_id, kmlMarkers);
         }
     }
 }
