@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
@@ -23,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -88,6 +90,8 @@ public class UserPersonalPages extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_user_personal_pages);
+        // hide keyboard
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         /**
          * Init variables
@@ -277,6 +281,7 @@ public class UserPersonalPages extends AppCompatActivity {
      */
     private static void populateKeyboard(View view) {
         // assign all keyboard buttons
+        letter_q = (Button) view.findViewById(R.id.b_letterQ);
         letter_w = (Button) view.findViewById(R.id.b_letterW);
         letter_e = (Button) view.findViewById(R.id.b_letterE);
         letter_r = (Button) view.findViewById(R.id.b_letterR);
@@ -305,11 +310,46 @@ public class UserPersonalPages extends AppCompatActivity {
         letter_n = (Button) view.findViewById(R.id.b_letterN);
         letter_m = (Button) view.findViewById(R.id.b_letterM);
 
-        int countW = Queries.getCharCount(thisActivity, user_id, letter_w.getText().charAt(0));
+        // set number of how many of each letter is collected
 
+        letter_q.setText(getCharWithCount(letter_q));
+        letter_w.setText(getCharWithCount(letter_w));
+        letter_e.setText(getCharWithCount(letter_e));
+        letter_r.setText(getCharWithCount(letter_r));
+        letter_t.setText(getCharWithCount(letter_t));
+        letter_y.setText(getCharWithCount(letter_y));
+        letter_u.setText(getCharWithCount(letter_u));
+        letter_i.setText(getCharWithCount(letter_i));
+        letter_o.setText(getCharWithCount(letter_o));
+        letter_p.setText(getCharWithCount(letter_p));
 
+        letter_a.setText(getCharWithCount(letter_a));
+        letter_s.setText(getCharWithCount(letter_s));
+        letter_d.setText(getCharWithCount(letter_d));
+        letter_f.setText(getCharWithCount(letter_f));
+        letter_g.setText(getCharWithCount(letter_g));
+        letter_h.setText(getCharWithCount(letter_h));
+        letter_j.setText(getCharWithCount(letter_j));
+        letter_k.setText(getCharWithCount(letter_k));
+        letter_l.setText(getCharWithCount(letter_l));
 
+        letter_z.setText(getCharWithCount(letter_z));
+        letter_x.setText(getCharWithCount(letter_x));
+        letter_c.setText(getCharWithCount(letter_c));
+        letter_v.setText(getCharWithCount(letter_v));
+        letter_b.setText(getCharWithCount(letter_b));
+        letter_n.setText(getCharWithCount(letter_n));
+        letter_m.setText(getCharWithCount(letter_m));
+    }
 
+    public static SpannableStringBuilder getCharWithCount(Button b) {
+        char ch = b.getText().charAt(0);
+        int count = Queries.getCharCount(thisActivity, user_id, ch);
+        String text = "" + ch + count;
+        SpannableStringBuilder ssb = new SpannableStringBuilder(text);
+        ssb.setSpan(new SuperscriptSpan(), 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssb.setSpan(new RelativeSizeSpan(0.7f), 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return ssb;
     }
 
 
