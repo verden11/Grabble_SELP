@@ -352,5 +352,183 @@ public class UserPersonalPages extends AppCompatActivity {
         return ssb;
     }
 
+    public static SpannableStringBuilder getCharWithCount(Button b, int count) {
+        char ch = b.getText().charAt(0);
+        String text = "" + ch + count;
+        SpannableStringBuilder ssb = new SpannableStringBuilder(text);
+        ssb.setSpan(new SuperscriptSpan(), 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssb.setSpan(new RelativeSizeSpan(0.7f), 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return ssb;
+    }
+
+    public void charButtonPress(View view) {
+        view.getId();
+        Button b;
+        int count;
+        String text;
+        switch (view.getId()) {
+            case R.id.b_letterQ:
+                b = letter_q;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterW:
+                b = letter_w;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterE:
+                b = letter_e;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterR:
+                b = letter_r;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterT:
+                b = letter_t;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterY:
+                b = letter_y;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterU:
+                b = letter_u;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterI:
+                b = letter_i;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterO:
+                b = letter_o;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterP:
+                b = letter_p;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            // second row
+            case R.id.b_letterA:
+                b = letter_a;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterS:
+                b = letter_s;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterD:
+                b = letter_d;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterF:
+                b = letter_f;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterG:
+                b = letter_g;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterH:
+                b = letter_h;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterJ:
+                b = letter_j;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterK:
+                b = letter_k;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterL:
+                b = letter_l;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            // third row
+            case R.id.b_letterZ:
+                b = letter_z;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterX:
+                b = letter_x;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterC:
+                b = letter_c;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterV:
+                b = letter_v;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterB:
+                b = letter_b;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterN:
+                b = letter_n;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            case R.id.b_letterM:
+                b = letter_m;
+                text = b.getText().toString();
+                count = Integer.valueOf(text.substring(1, text.length()));
+                b.setText(getCharWithCount(b, --count));
+                break;
+            default:
+                Log.d(TAG, "UNKNOWN");
+        }
+    }
+
 
 }

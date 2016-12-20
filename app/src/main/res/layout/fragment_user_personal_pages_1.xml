@@ -47,6 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_Q"
             android:textAllCaps="false" />
@@ -56,6 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_W"
             android:textAllCaps="false" />
@@ -65,6 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_E"
             android:textAllCaps="false" />
@@ -73,8 +76,9 @@
             android:id="@+id/b_letterR"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             android:layout_weight="1"
+
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_R"
             android:textAllCaps="false" />
@@ -83,8 +87,8 @@
             android:id="@+id/b_letterT"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_T"
             android:textAllCaps="false" />
@@ -92,19 +96,19 @@
         <Button
             android:id="@+id/b_letterY"
             android:layout_width="0dp"
-
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_Y"
             android:textAllCaps="false" />
 
         <Button
             android:id="@+id/b_letterU"
-
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_U"
             android:textAllCaps="false" />
@@ -112,9 +116,9 @@
         <Button
             android:id="@+id/b_letterI"
             android:layout_width="0dp"
-
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_I"
             android:textAllCaps="false" />
@@ -124,17 +128,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_O"
             android:textAllCaps="false" />
 
         <Button
             android:id="@+id/b_letterP"
-
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_P"
             android:textAllCaps="false" />
@@ -152,7 +156,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_A"
             android:textAllCaps="false" />
@@ -161,8 +165,8 @@
             android:id="@+id/b_letterS"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_S"
             android:textAllCaps="false" />
@@ -172,7 +176,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_D"
             android:textAllCaps="false" />
@@ -181,8 +185,8 @@
             android:id="@+id/b_letterF"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_F"
             android:textAllCaps="false" />
@@ -190,9 +194,9 @@
         <Button
             android:id="@+id/b_letterG"
             android:layout_width="0dp"
-
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_G"
             android:textAllCaps="false" />
@@ -202,7 +206,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_H"
             android:textAllCaps="false" />
@@ -210,9 +214,9 @@
         <Button
             android:id="@+id/b_letterJ"
             android:layout_width="0dp"
-
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_J"
             android:textAllCaps="false" />
@@ -222,6 +226,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_K"
             android:textAllCaps="false" />
@@ -231,6 +236,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_L"
             android:textAllCaps="false" />
@@ -248,6 +254,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_Z"
             android:textAllCaps="false" />
@@ -257,6 +264,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_X"
             android:textAllCaps="false" />
@@ -266,6 +274,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_C"
             android:textAllCaps="false" />
@@ -275,6 +284,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_V"
             android:textAllCaps="false" />
@@ -284,6 +294,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_B"
             android:textAllCaps="false" />
@@ -293,6 +304,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_N"
             android:textAllCaps="false" />
@@ -302,6 +314,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="charButtonPress"
             android:padding="0dp"
             android:text="@string/letter_M"
             android:textAllCaps="false" />
