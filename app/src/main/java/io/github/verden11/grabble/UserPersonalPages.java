@@ -42,6 +42,7 @@ public class UserPersonalPages extends AppCompatActivity {
      * where all letters are displayed
      */
     static EditText word_enter;
+    static Button submit_word;
 
     // top row
     static Button letter_q;
@@ -285,6 +286,15 @@ public class UserPersonalPages extends AppCompatActivity {
      */
     private static void populateKeyboard(View view) {
         word_enter = (EditText) view.findViewById(R.id.et_word);
+        submit_word = (Button) view.findViewById(R.id.b_submit_word);
+        submit_word.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO exec SQL querie
+                Log.d(TAG, "pressed");
+            }
+        });
+
 
         // assign all keyboard buttons
         letter_q = (Button) view.findViewById(R.id.b_letterQ);
@@ -466,12 +476,12 @@ public class UserPersonalPages extends AppCompatActivity {
         if (count > 0 && et_existing.length() < 7) {
             count--;
             b.setText(getCharWithCount(b, count));
-
             word_enter.setText(et_existing + ch);
         }
 
 
     }
+
 
 
 }
