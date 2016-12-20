@@ -71,4 +71,7 @@
     <string name="error_email_taken">This email is already registered</string>
 
 
+    <!-- Strings for User Personal pages-->
+    <string name="hint_enter_word">Enter a word</string>
+
 </resources>
