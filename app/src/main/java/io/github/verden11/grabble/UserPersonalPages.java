@@ -307,7 +307,7 @@ public class UserPersonalPages extends AppCompatActivity {
             public void onClick(View view) {
                 String wordToAdd = word_enter.getText().toString().toUpperCase();
                 if (wordToAdd.length() == 7 && dictionary.contains(wordToAdd)) {
-                    Log.d(TAG, "exists " + wordToAdd);
+                    Queries.saveWord(thisActivity, user_id, wordToAdd);
                 }
             }
         });
