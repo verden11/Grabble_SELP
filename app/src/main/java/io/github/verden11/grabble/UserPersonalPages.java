@@ -29,13 +29,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import io.github.verden11.grabble.Constants.Constants;
+import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.Queries;
 
 public class UserPersonalPages extends AppCompatActivity {
     private final static String TAG = "UserPersonalPages";
     private static int user_id;
     private static Activity thisActivity;
+    private static String dictionary = "";
 
     /**
      * Declare variables for 'keyboard' buttons
@@ -105,6 +110,16 @@ public class UserPersonalPages extends AppCompatActivity {
         // get the intent which started this activity
         Intent intent = getIntent();
         user_id = intent.getIntExtra(Constants.USER_ID, 0);
+
+        // Load dictionary
+
+        try {
+            InputStream is = this.getResources().openRawResource(R.raw.grabble);
+            dictionary = General.convertStreamToString(is).toUpperCase();
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -290,8 +305,10 @@ public class UserPersonalPages extends AppCompatActivity {
         submit_word.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO exec SQL querie
-                Log.d(TAG, "pressed");
+                String wordToAdd = word_enter.getText().toString().toUpperCase();
+                if (wordToAdd.length() == 7 && dictionary.contains(wordToAdd)) {
+                    Log.d(TAG, "exists " + wordToAdd);
+                }
             }
         });
 
