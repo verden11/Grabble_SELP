@@ -31,6 +31,9 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.General;
@@ -307,7 +310,36 @@ public class UserPersonalPages extends AppCompatActivity {
             public void onClick(View view) {
                 String wordToAdd = word_enter.getText().toString().toUpperCase();
                 if (wordToAdd.length() == 7 && dictionary.contains(wordToAdd)) {
-                    Queries.saveWord(thisActivity, user_id, wordToAdd);
+
+                    // check if user has enough letters
+                    boolean enoughLettersInDB = true;
+                    List<Character> charList = new ArrayList<Character>();
+                    for (char ch : wordToAdd.toCharArray()) {
+                        charList.add(ch);
+                    }
+
+                    while (charList.size() > 0) {
+                        char ch = charList.get(0);
+                        int count = 0;
+                        while (charList.contains(ch)) {
+                            count++;
+                            charList.remove(charList.indexOf(Character.valueOf(ch)));
+                        }
+                        int countInDB = Queries.getCharCount(thisActivity, user_id, ch);
+                        if (count > countInDB) {
+                            enoughLettersInDB = false;
+                            break;
+                        }
+                    }
+                    if (enoughLettersInDB) {
+                        Queries.saveWord(thisActivity, user_id, wordToAdd);
+                        for (char ch : wordToAdd.toCharArray()) {
+                            Queries.removeChar(thisActivity, user_id, ch);
+                        }
+                        addCountToLetters();
+                        Snackbar.make(view, "Word " + wordToAdd + " inserted", Snackbar.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });
@@ -344,7 +376,12 @@ public class UserPersonalPages extends AppCompatActivity {
         letter_m = (Button) view.findViewById(R.id.b_letterM);
 
         // set number of how many of each letter is collected
+        addCountToLetters();
 
+
+    }
+
+    public static void addCountToLetters() {
         letter_q.setText(getCharWithCount(letter_q));
         letter_w.setText(getCharWithCount(letter_w));
         letter_e.setText(getCharWithCount(letter_e));
@@ -373,6 +410,7 @@ public class UserPersonalPages extends AppCompatActivity {
         letter_b.setText(getCharWithCount(letter_b));
         letter_n.setText(getCharWithCount(letter_n));
         letter_m.setText(getCharWithCount(letter_m));
+
     }
 
     public static SpannableStringBuilder getCharWithCount(Button b) {
@@ -498,7 +536,6 @@ public class UserPersonalPages extends AppCompatActivity {
 
 
     }
-
 
 
 }
