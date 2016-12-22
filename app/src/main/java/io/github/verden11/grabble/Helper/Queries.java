@@ -248,4 +248,40 @@ public class Queries {
     }
 
 
+    /**
+     * UserPersonalPages
+     * Save word to db
+     */
+    public static void saveWord(Activity activity, int user_id, String word) {
+        String existing = getWords(activity, user_id);
+        existing += word;
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put(DbHelper.Stats.COLUMN_WORDS, existing);
+            db.update(DbHelper.Stats.TABLE_NAME, cv, "user_id = " + user_id, null);
+        } finally {
+            db.close();
+        }
+    }
+
+    public static String getWords(Activity activity, int user_id) {
+        String ret = "";
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " + DbHelper.Stats.COLUMN_WORDS +
+                " FROM " + DbHelper.Stats.TABLE_NAME +
+                " WHERE " + DbHelper.Stats.COLUMN_USER_ID + " = " + user_id + ";", null);
+        try {
+            c.moveToFirst();
+            ret = c.getString(0);
+        } finally {
+            c.close();
+            db.close();
+        }
+        return ret;
+    }
+
+
 }
