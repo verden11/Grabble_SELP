@@ -132,7 +132,21 @@ public class Queries {
         } finally {
             db.close();
         }
+    }
 
+    public static void removeChar(Activity activity, int user_id, char ch) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        try {
+            ch = Character.toUpperCase(ch);
+            int charCount = getCharCount(activity, user_id, ch);
+            charCount--;
+            ContentValues cv = new ContentValues();
+            cv.put(ch + "", charCount);
+            db.update(DbHelper.Stats.TABLE_NAME, cv, "user_id= " + user_id, null);
+        } finally {
+            db.close();
+        }
     }
 
     public static int getCharCount(Activity activity, int user_id, char ch) {
