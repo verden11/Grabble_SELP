@@ -72,6 +72,7 @@
 
 
     <!-- Strings for User Personal pages-->
-    <string name="hint_enter_word">Enter a word</string>
+    <string name="hint_enter_word">Enter a word</string>\
+    <string name="personal_page_2">Words you have Scrabbled</string>
 
 </resources>

@@ -234,8 +234,8 @@ public class UserPersonalPages extends AppCompatActivity {
                     break;
                 case 2:
                     Log.d(TAG, "onCreateView 2 in switch");
-                    rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
-                    //                    button.setText("2");
+                    rootView = inflater.inflate(R.layout.fragment_user_personal_pages_2, container, false);
+                    populateWords(rootView);
                     break;
                 case 3:
                     Log.d(TAG, "onCreateView 3 in switch");
@@ -537,5 +537,7 @@ public class UserPersonalPages extends AppCompatActivity {
 
     }
 
-
+    private static void populateWords(View view) {
+        
+    }
 }
