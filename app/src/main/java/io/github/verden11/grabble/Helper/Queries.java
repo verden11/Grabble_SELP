@@ -280,6 +280,10 @@ public class Queries {
         }
     }
 
+    /**
+     * Get all words from DB
+     */
+
     public static String getWords(Activity activity, int user_id) {
         String ret = "";
         DbHelper mDbHelper = new DbHelper(activity);

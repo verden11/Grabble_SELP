@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -538,6 +539,15 @@ public class UserPersonalPages extends AppCompatActivity {
     }
 
     private static void populateWords(View view) {
-        
+        String allWords = Queries.getWords(thisActivity, user_id);
+        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ll_allWords);
+
+        int wordCount = allWords.length() / 7;
+        for (int i = 0; i < wordCount; i++) {
+            TextView tv1 = new TextView(thisActivity);
+            String word = allWords.substring(i * 7, i * 7 + 7);
+            tv1.setText(word);
+            linearLayout.addView(tv1);
+        }
     }
 }
