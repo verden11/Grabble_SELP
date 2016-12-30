@@ -10,7 +10,7 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper {
     private static final String TAG = "DbHelperTAG";
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 10;
+    public static final int DATABASE_VERSION = 11;
     public static final String DATABASE_NAME = "Grabble.db";
 
 
@@ -31,6 +31,8 @@ public class DbHelper extends SQLiteOpenHelper {
         public static final String COLUMN_WORDS = "words";
         public static final String COLUMN_DISTANCE_WALKED = "distance";
         public static final String COLUMN_SCORE = "score";
+        public static final String COLUMN_TOTAL_LETTERS_COLLECTED = "total_letters_collected";
+        public static final String COLUMN_LETTERS_AVAILABLE = "letters_available";
 
         public static final String COLUMN_LETTER_A = "A";
         public static final String COLUMN_LETTER_B = "B";
@@ -102,6 +104,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     Stats.COLUMN_WORDS + TEXT_TYPE + COMMA_SEP +
                     Stats.COLUMN_DISTANCE_WALKED + DECIMAL_TYPE + COMMA_SEP +
                     Stats.COLUMN_SCORE + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_TOTAL_LETTERS_COLLECTED + INT_TYPE + DEFAULT_0 + COMMA_SEP +
+                    Stats.COLUMN_LETTERS_AVAILABLE + INT_TYPE + DEFAULT_0 + COMMA_SEP +     
                     Stats.COLUMN_LETTER_A + INT_TYPE + DEFAULT_0 + COMMA_SEP +
                     Stats.COLUMN_LETTER_B + INT_TYPE + DEFAULT_0 + COMMA_SEP +
                     Stats.COLUMN_LETTER_C + INT_TYPE + DEFAULT_0 + COMMA_SEP +
