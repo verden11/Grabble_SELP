@@ -105,7 +105,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     Stats.COLUMN_DISTANCE_WALKED + DECIMAL_TYPE + COMMA_SEP +
                     Stats.COLUMN_SCORE + INT_TYPE + DEFAULT_0 + COMMA_SEP +
                     Stats.COLUMN_TOTAL_LETTERS_COLLECTED + INT_TYPE + DEFAULT_0 + COMMA_SEP +
-                    Stats.COLUMN_LETTERS_AVAILABLE + INT_TYPE + DEFAULT_0 + COMMA_SEP +     
+                    Stats.COLUMN_LETTERS_AVAILABLE + INT_TYPE + DEFAULT_0 + COMMA_SEP +
                     Stats.COLUMN_LETTER_A + INT_TYPE + DEFAULT_0 + COMMA_SEP +
                     Stats.COLUMN_LETTER_B + INT_TYPE + DEFAULT_0 + COMMA_SEP +
                     Stats.COLUMN_LETTER_C + INT_TYPE + DEFAULT_0 + COMMA_SEP +

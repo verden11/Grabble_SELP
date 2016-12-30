@@ -40,15 +40,21 @@
 
             <TextView
                 android:id="@+id/tv_totalScore"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/personal_page_2_score" />
 
             <TextView
                 android:id="@+id/tv_totalWords"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/personal_page_2_wordCount" />
+
+            <TextView
+                android:id="@+id/tv_totalLetters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/personal_page_2_lettersTotal" />
 
         </LinearLayout>
 
@@ -59,14 +65,15 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Distance Walked:" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_totalLettersAvailable"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Total Score:" />
+                android:text="@string/personal_page_2_lettersNow" />
 
         </LinearLayout>
 

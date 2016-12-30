@@ -135,6 +135,7 @@ public class Queries {
         } finally {
             db.close();
         }
+        saveAvailableLetterCount(activity, user_id, true);
     }
 
     public static void removeChar(Activity activity, int user_id, char ch) {
@@ -150,6 +151,8 @@ public class Queries {
         } finally {
             db.close();
         }
+
+        saveAvailableLetterCount(activity, user_id, false);
     }
 
     public static int getCharCount(Activity activity, int user_id, char ch) {
@@ -377,6 +380,81 @@ public class Queries {
                 return Constants.score_M;
             default:
                 return 0;
+        }
+
+    }
+
+    public static int getAvailableLetterCount(Activity activity, int user_id) {
+        int ret = 0;
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " + DbHelper.Stats.COLUMN_LETTERS_AVAILABLE +
+                " FROM " + DbHelper.Stats.TABLE_NAME +
+                " WHERE " + DbHelper.Stats.COLUMN_USER_ID + " = " + user_id + ";", null);
+        try {
+            c.moveToFirst();
+            ret = c.getInt(0);
+        } finally {
+            c.close();
+            db.close();
+        }
+        return ret;
+    }
+
+    public static void saveAvailableLetterCount(Activity activity, int user_id, boolean add) {
+        int count = getAvailableLetterCount(activity, user_id);
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        if (add) {
+            count++;
+        } else {
+            count--;
+        }
+
+        try {
+            cv.put(DbHelper.Stats.COLUMN_LETTERS_AVAILABLE, count);
+            db.update(DbHelper.Stats.TABLE_NAME, cv, "user_id = " + user_id, null);
+        } finally {
+            db.close();
+        }
+
+        if (add) {
+            saveTotalLetterCount(activity, user_id);
+        }
+
+    }
+
+    public static int getTotalLetterCount(Activity activity, int user_id) {
+        int ret = 0;
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " + DbHelper.Stats.COLUMN_TOTAL_LETTERS_COLLECTED +
+                " FROM " + DbHelper.Stats.TABLE_NAME +
+                " WHERE " + DbHelper.Stats.COLUMN_USER_ID + " = " + user_id + ";", null);
+        try {
+            c.moveToFirst();
+            ret = c.getInt(0);
+        } finally {
+            c.close();
+            db.close();
+        }
+        return ret;
+    }
+
+
+    public static void saveTotalLetterCount(Activity activity, int user_id) {
+        int count = getTotalLetterCount(activity, user_id);
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        try {
+            cv.put(DbHelper.Stats.COLUMN_TOTAL_LETTERS_COLLECTED, ++count);
+            db.update(DbHelper.Stats.TABLE_NAME, cv, "user_id = " + user_id, null);
+        } finally {
+            db.close();
         }
 
     }
