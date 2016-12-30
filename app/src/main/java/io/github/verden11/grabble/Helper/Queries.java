@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.SyncStateContract;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.github.verden11.grabble.Constants.Constants;
 
 public class Queries {
 
@@ -266,9 +269,17 @@ public class Queries {
      * UserPersonalPages
      * Save word to db
      */
-    public static void saveWord(Activity activity, int user_id, String word) {
+    public static void saveWord(Activity activity, int user_id, String word, int score) {
+        String scoreStr = "" + score;
+        if (score < 10) {
+            scoreStr = "00" + scoreStr;
+        } else if (score < 100) {
+            scoreStr = "0" + scoreStr;
+        }
+
+
         String existing = getWords(activity, user_id);
-        existing += word;
+        existing += word + scoreStr;
         DbHelper mDbHelper = new DbHelper(activity);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -283,7 +294,6 @@ public class Queries {
     /**
      * Get all words from DB
      */
-
     public static String getWords(Activity activity, int user_id) {
         String ret = "";
         DbHelper mDbHelper = new DbHelper(activity);
@@ -299,6 +309,76 @@ public class Queries {
             db.close();
         }
         return ret;
+    }
+
+    /**
+     * get int score by char
+     */
+
+    public static int getCharValue(char ch) {
+        ch = Character.toUpperCase(ch);
+        switch (ch) {
+            // Q W E R T Y U I O P
+            case 'Q':
+                return Constants.score_Q;
+            case 'W':
+                return Constants.score_W;
+            case 'E':
+                return Constants.score_E;
+            case 'R':
+                return Constants.score_R;
+            case 'T':
+                return Constants.score_T;
+            case 'Y':
+                return Constants.score_Y;
+            case 'U':
+                return Constants.score_U;
+            case 'I':
+                return Constants.score_I;
+            case 'O':
+                return Constants.score_O;
+            case 'P':
+                return Constants.score_P;
+
+            // A S D F G H J K L
+            case 'A':
+                return Constants.score_A;
+            case 'S':
+                return Constants.score_S;
+            case 'D':
+                return Constants.score_D;
+            case 'F':
+                return Constants.score_F;
+            case 'G':
+                return Constants.score_G;
+            case 'H':
+                return Constants.score_H;
+            case 'J':
+                return Constants.score_J;
+            case 'K':
+                return Constants.score_K;
+            case 'L':
+                return Constants.score_L;
+
+            // Z X C V B N M
+            case 'Z':
+                return Constants.score_Z;
+            case 'X':
+                return Constants.score_X;
+            case 'C':
+                return Constants.score_C;
+            case 'V':
+                return Constants.score_V;
+            case 'B':
+                return Constants.score_B;
+            case 'N':
+                return Constants.score_N;
+            case 'M':
+                return Constants.score_M;
+            default:
+                return 0;
+        }
+
     }
 
 

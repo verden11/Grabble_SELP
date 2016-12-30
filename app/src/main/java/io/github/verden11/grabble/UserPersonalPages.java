@@ -2,6 +2,7 @@ package io.github.verden11.grabble;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -12,13 +13,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.SuperscriptSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,10 +33,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.Queries;
 
@@ -311,20 +308,24 @@ public class UserPersonalPages extends AppCompatActivity {
             public void onClick(View view) {
                 String wordToAdd = word_enter.getText().toString().toUpperCase();
                 if (wordToAdd.length() == 7 && dictionary.contains(wordToAdd)) {
+                    int score = 0;
 
                     // check if user has enough letters
                     boolean enoughLettersInDB = true;
-                    List<Character> charList = new ArrayList<Character>();
+                    List<Character> charList = new ArrayList<>();
                     for (char ch : wordToAdd.toCharArray()) {
                         charList.add(ch);
                     }
+
 
                     while (charList.size() > 0) {
                         char ch = charList.get(0);
                         int count = 0;
                         while (charList.contains(ch)) {
                             count++;
+                            score += Queries.getCharValue(ch);
                             charList.remove(charList.indexOf(Character.valueOf(ch)));
+
                         }
                         int countInDB = Queries.getCharCount(thisActivity, user_id, ch);
                         if (count > countInDB) {
@@ -333,7 +334,7 @@ public class UserPersonalPages extends AppCompatActivity {
                         }
                     }
                     if (enoughLettersInDB) {
-                        Queries.saveWord(thisActivity, user_id, wordToAdd);
+                        Queries.saveWord(thisActivity, user_id, wordToAdd, score);
                         for (char ch : wordToAdd.toCharArray()) {
                             Queries.removeChar(thisActivity, user_id, ch);
                         }
@@ -542,12 +543,50 @@ public class UserPersonalPages extends AppCompatActivity {
         String allWords = Queries.getWords(thisActivity, user_id);
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ll_allWords);
 
-        int wordCount = allWords.length() / 7;
+        int wordCount = allWords.length() / 10;
+
         for (int i = 0; i < wordCount; i++) {
+            LinearLayout ll = new LinearLayout(thisActivity);
+            ll.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            ll.setOrientation(LinearLayout.HORIZONTAL);
+            ll.setPadding(0,30,0,30);
+
+
+            View divider = new View(thisActivity);
+            divider.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    3));
+            divider.setBackgroundColor(Color.BLACK);
+
+
             TextView tv1 = new TextView(thisActivity);
-            String word = allWords.substring(i * 7, i * 7 + 7);
-            tv1.setText(word);
-            linearLayout.addView(tv1);
+            tv1.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            tv1.setPadding(50, 0, 0, 0);
+            String word = allWords.substring(i * 10, i * 10 + 10);
+            tv1.setText(word.substring(0, 7));
+
+
+            TextView tv2 = new TextView(thisActivity);
+            tv2.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            tv2.setGravity(Gravity.RIGHT);
+            tv2.setPadding(0, 0, 50, 0);
+
+            int score = Integer.valueOf(word.substring(7, 10));
+            tv2.setText(score + "");
+
+
+            ll.addView(tv1);
+            ll.addView(tv2);
+
+
+            linearLayout.addView(ll);
+            linearLayout.addView(divider);
         }
     }
 }
