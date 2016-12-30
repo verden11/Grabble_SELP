@@ -73,6 +73,9 @@
 
     <!-- Strings for User Personal pages-->
     <string name="hint_enter_word">Enter a word</string>\
-    <string name="personal_page_2">Words you have Scrabbled</string>
+    <string name="personal_page_2_words">Words Scrabbled</string>
+    <string name="personal_page_2_stats">Statistics</string>
+    <string name="personal_page_2_score">Total Score:</string>
+    <string name="personal_page_2_wordCount">Words Collected:</string>
 
 </resources>

@@ -42,6 +42,8 @@ public class UserPersonalPages extends AppCompatActivity {
     private static int user_id;
     private static Activity thisActivity;
     private static String dictionary = "";
+    private static int totalScore = 0;
+    private static int totalWords = 0;
 
     /**
      * Declare variables for 'keyboard' buttons
@@ -234,6 +236,7 @@ public class UserPersonalPages extends AppCompatActivity {
                     Log.d(TAG, "onCreateView 2 in switch");
                     rootView = inflater.inflate(R.layout.fragment_user_personal_pages_2, container, false);
                     populateWords(rootView);
+                    populateStatistics(rootView);
                     break;
                 case 3:
                     Log.d(TAG, "onCreateView 3 in switch");
@@ -542,8 +545,11 @@ public class UserPersonalPages extends AppCompatActivity {
     private static void populateWords(View view) {
         String allWords = Queries.getWords(thisActivity, user_id);
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ll_allWords);
+        totalScore = 0;
+        totalWords = 0;
 
         int wordCount = allWords.length() / 10;
+        totalWords = wordCount;
 
         for (int i = 0; i < wordCount; i++) {
             LinearLayout ll = new LinearLayout(thisActivity);
@@ -551,7 +557,7 @@ public class UserPersonalPages extends AppCompatActivity {
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
             ll.setOrientation(LinearLayout.HORIZONTAL);
-            ll.setPadding(0,30,0,30);
+            ll.setPadding(0, 30, 0, 30);
 
 
             View divider = new View(thisActivity);
@@ -578,6 +584,7 @@ public class UserPersonalPages extends AppCompatActivity {
             tv2.setPadding(0, 0, 50, 0);
 
             int score = Integer.valueOf(word.substring(7, 10));
+            totalScore += score;
             tv2.setText(score + "");
 
 
@@ -589,4 +596,19 @@ public class UserPersonalPages extends AppCompatActivity {
             linearLayout.addView(divider);
         }
     }
+
+    private static void populateStatistics(View view) {
+        TextView tvScore = (TextView) view.findViewById(R.id.tv_totalScore);
+        tvScore.setText(R.string.personal_page_2_score);
+        String totalScoreStr = tvScore.getText().toString();
+        totalScoreStr += " " + totalScore;
+        tvScore.setText(totalScoreStr);
+
+        TextView tvWordCount = (TextView) view.findViewById(R.id.tv_totalWords);
+        tvWordCount.setText(R.string.personal_page_2_wordCount);
+        String totalWordsStr = tvWordCount.getText().toString();
+        totalWordsStr += " " + totalWords;
+        tvWordCount.setText(totalWordsStr);
+    }
+
 }

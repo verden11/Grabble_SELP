@@ -5,20 +5,30 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:weightSum="12"
+    android:weightSum="14"
     tools:context="io.github.verden11.grabble.UserPersonalPages">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/holo_blue_bright"></View>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/personal_page_2" />
+        android:text="@string/personal_page_2_stats" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/holo_blue_bright"></View>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
+        android:layout_weight="3"
         android:orientation="horizontal"
         android:weightSum="10">
 
@@ -29,14 +39,16 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_totalScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Score:" />
+                android:text="@string/personal_page_2_score" />
 
             <TextView
+                android:id="@+id/tv_totalWords"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Words Collected:" />
+                android:text="@string/personal_page_2_wordCount" />
 
         </LinearLayout>
 
@@ -61,17 +73,36 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/holo_blue_bright"></View>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/personal_page_2_words" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/holo_blue_bright"></View>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
+        android:layout_weight="9"
         android:background="@android:color/darker_gray">
+
 
         <LinearLayout
             android:id="@+id/ll_allWords"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
 
         </LinearLayout>
 
