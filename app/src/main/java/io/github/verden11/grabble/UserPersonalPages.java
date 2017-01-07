@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.Queries;
 
@@ -609,6 +611,18 @@ public class UserPersonalPages extends AppCompatActivity {
         String totalWordsStr = tvWordCount.getText().toString();
         totalWordsStr += " " + totalWords;
         tvWordCount.setText(totalWordsStr);
+
+        TextView tvLetterCount = (TextView) view.findViewById(R.id.tv_totalLetters);
+        tvLetterCount.setText(R.string.personal_page_2_lettersTotal);
+        String letterCountStr = tvLetterCount.getText().toString();
+        letterCountStr += " " + Queries.getTotalLetterCount(thisActivity, user_id);
+        tvLetterCount.setText(letterCountStr);
+
+        TextView tvLettersAvailable = (TextView) view.findViewById(R.id.tv_totalLettersAvailable);
+        tvLettersAvailable.setText(R.string.personal_page_2_lettersNow);
+        String lettersAvilableStr = tvLettersAvailable.getText().toString();
+        lettersAvilableStr += " " + Queries.getAvailableLetterCount(thisActivity, user_id);
+        tvLettersAvailable.setText(lettersAvilableStr);
     }
 
 }

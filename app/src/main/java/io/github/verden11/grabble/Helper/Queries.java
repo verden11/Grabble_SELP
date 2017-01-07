@@ -459,5 +459,36 @@ public class Queries {
 
     }
 
+    public static void updateDistanceWalked(Activity activity, int user_id, float distance) {
+        float alreadyWalked = getDistanceWalked(activity, user_id);
+        float totalWalked = alreadyWalked + distance;
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put(DbHelper.Stats.COLUMN_DISTANCE_WALKED, totalWalked);
+            db.update(DbHelper.Stats.TABLE_NAME, cv, "user_id = " + user_id, null);
+        } finally {
+            db.close();
+        }
+    }
+
+    public static float getDistanceWalked(Activity activity, int user_id) {
+        float ret = 0;
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " + DbHelper.Stats.COLUMN_DISTANCE_WALKED +
+                " FROM " + DbHelper.Stats.TABLE_NAME +
+                " WHERE " + DbHelper.Stats.COLUMN_USER_ID + " = " + user_id + ";", null);
+        try {
+            c.moveToFirst();
+            ret = c.getFloat(0);
+        } finally {
+            c.close();
+            db.close();
+        }
+        return ret;
+    }
+
 
 }

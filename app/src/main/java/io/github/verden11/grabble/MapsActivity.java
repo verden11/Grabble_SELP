@@ -63,6 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final String TAG = "MapsActivity";
     private SQLiteDatabase db;
     private int user_id;
+    private float distance_walked;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -113,6 +114,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         collected_chars = new ArrayList<>();
         mRequestingLocationUpdates = true;
         mLastUpdateTime = "";
+        distance_walked = 0;
 
         // Update values using data stored in the Bundle.
         updateValuesFromBundle(savedInstanceState);
@@ -228,7 +230,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged");
-
+        distance_walked += mCurrentLocation.distanceTo(location);
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         if (mCurrentLocation != null) {
@@ -240,8 +242,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "updateUI");
         double myLat = mCurrentLocation.getLatitude();
         double myLng = mCurrentLocation.getLongitude();
-        Log.i(TAG, myLat + "");
-        Log.i(TAG, myLng + "");
 
         if (mMap == null) {
             return;
@@ -360,6 +360,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             collected_chars.clear();
         }
         Queries.saveKML(thisActivity, user_id, kmlMarkers);
+        Queries.updateDistanceWalked(thisActivity, user_id, distance_walked);
     }
 
     protected void createLocationRequest() {
