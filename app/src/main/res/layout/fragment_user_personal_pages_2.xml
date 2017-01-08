@@ -65,9 +65,10 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_totalDistanceWalked"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Distance Walked:" />
+                android:text="@string/personal_page_2_distanceWalked" />
 
             <TextView
                 android:id="@+id/tv_totalLettersAvailable"

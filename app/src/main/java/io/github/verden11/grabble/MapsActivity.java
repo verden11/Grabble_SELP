@@ -230,6 +230,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged");
+        //TODO calculate distance only if in 'Square'
         distance_walked += mCurrentLocation.distanceTo(location);
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
@@ -361,6 +362,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         Queries.saveKML(thisActivity, user_id, kmlMarkers);
         Queries.updateDistanceWalked(thisActivity, user_id, distance_walked);
+        // TODO not sure if this reset needed
+        distance_walked = 0;
     }
 
     protected void createLocationRequest() {

@@ -79,5 +79,7 @@
     <string name="personal_page_2_wordCount">Words Collected:</string>
     <string name="personal_page_2_lettersTotal">Total letters collected:</string>
     <string name="personal_page_2_lettersNow">Letters available to use:</string>
+    <string name="personal_page_2_distanceWalked">Distance Walked:</string>
+
 
 </resources>

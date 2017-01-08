@@ -600,24 +600,36 @@ public class UserPersonalPages extends AppCompatActivity {
     }
 
     private static void populateStatistics(View view) {
+        // Total Score
         TextView tvScore = (TextView) view.findViewById(R.id.tv_totalScore);
         tvScore.setText(R.string.personal_page_2_score);
         String totalScoreStr = tvScore.getText().toString();
         totalScoreStr += " " + totalScore;
         tvScore.setText(totalScoreStr);
 
+        // Words Collected
         TextView tvWordCount = (TextView) view.findViewById(R.id.tv_totalWords);
         tvWordCount.setText(R.string.personal_page_2_wordCount);
         String totalWordsStr = tvWordCount.getText().toString();
         totalWordsStr += " " + totalWords;
         tvWordCount.setText(totalWordsStr);
 
+        // Total Letters Collected
         TextView tvLetterCount = (TextView) view.findViewById(R.id.tv_totalLetters);
         tvLetterCount.setText(R.string.personal_page_2_lettersTotal);
         String letterCountStr = tvLetterCount.getText().toString();
         letterCountStr += " " + Queries.getTotalLetterCount(thisActivity, user_id);
         tvLetterCount.setText(letterCountStr);
 
+        //Total Distance Walked
+        TextView tvDistance = (TextView) view.findViewById(R.id.tv_totalDistanceWalked);
+        tvDistance.setText(R.string.personal_page_2_distanceWalked);
+        String totalDistanceWalked = tvDistance.getText().toString();
+        totalDistanceWalked += " " + Queries.getDistanceWalked(thisActivity, user_id);
+        tvDistance.setText(totalDistanceWalked);
+
+
+        // Total Letters Available to use
         TextView tvLettersAvailable = (TextView) view.findViewById(R.id.tv_totalLettersAvailable);
         tvLettersAvailable.setText(R.string.personal_page_2_lettersNow);
         String lettersAvilableStr = tvLettersAvailable.getText().toString();
