@@ -124,8 +124,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
     }
 
 
@@ -222,8 +220,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 updateUI();
             }
         }
-
-
     }
 
 
@@ -294,15 +290,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     marker.setVisible(false);
                 }
-
-
             }
 
             //remove all collected letters
             kmlMarkers.removeAll(collected_here);
             Log.d(TAG, " remaining : " + kmlMarkers.size() + "\n Collected: \n" + collected_chars.toString());
-
-
         }
     }
 
@@ -334,7 +326,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startLocationUpdates();
             }
         }
-
     }
 
     @Override
@@ -345,8 +336,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
         }
-
-
     }
 
     protected void stopLocationUpdates() {
@@ -421,7 +410,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onSaveInstanceState(savedInstanceState);
     }
 
-
     /**
      * Builds a GoogleApiClient. Uses the {@code #addApi} method to request the
      * LocationServices API.
@@ -465,8 +453,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         finishAffinity();
                     }
                 });
-
-
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -522,7 +508,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 return;
             }
-
             // other 'case' lines to check for other
             // permissions this app might request
         }
@@ -562,7 +547,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     double lngPlace = Double.parseDouble(latlngStr[1]);
                     LatLng latLng = new LatLng(latPlace, lngPlace);
 
-
                     // draw maker on the map
                     Marker m = mMap.addMarker(new MarkerOptions()
                             .position(latLng)
@@ -570,24 +554,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             .visible(false));
                     // populate array list
                     kmlMarkers.add(m);
-
-
                 }
+
                 if (mCurrentLocation != null) {
                     updateUI();
                 }
-
-
             }
-
 
             // save time stamp of 'last KML download time
             Calendar sCalendar = Calendar.getInstance();
             long epoch = sCalendar.getTimeInMillis();
             // get only date (no hours/minutes/seconds needed)
             epoch = epoch - (epoch % 86400000L);
-
-
             Queries.saveKMLDownloadTime(thisActivity, user_id, epoch);
         }
     }

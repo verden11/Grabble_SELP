@@ -2,7 +2,6 @@ package io.github.verden11.grabble;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -14,24 +13,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.AlignmentSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.SuperscriptSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -154,8 +148,6 @@ public class UserPersonalPages extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-
     }
 
 
@@ -260,8 +252,6 @@ public class UserPersonalPages extends AppCompatActivity {
             }
             return rootView;
         }
-
-
     }
 
     /**
@@ -420,8 +410,6 @@ public class UserPersonalPages extends AppCompatActivity {
 
         // set number of how many of each letter is collected
         addCountToLetters();
-
-
     }
 
     public static void addCountToLetters() {
@@ -453,7 +441,6 @@ public class UserPersonalPages extends AppCompatActivity {
         letter_b.setText(getCharWithCount(letter_b));
         letter_n.setText(getCharWithCount(letter_n));
         letter_m.setText(getCharWithCount(letter_m));
-
     }
 
     public static SpannableStringBuilder getCharWithCount(Button b) {
@@ -576,8 +563,6 @@ public class UserPersonalPages extends AppCompatActivity {
             b.setText(getCharWithCount(b, count));
             word_enter.setText(et_existing + ch);
         }
-
-
     }
 
 
@@ -630,7 +615,6 @@ public class UserPersonalPages extends AppCompatActivity {
         totalDistanceWalked += " " + Queries.getDistanceWalked(thisActivity, user_id);
         tvDistance.setText(totalDistanceWalked);
 
-
         // Total Letters Available to use
         TextView tvLettersAvailable = (TextView) view.findViewById(R.id.tv_totalLettersAvailable);
         tvLettersAvailable.setText(R.string.personal_page_2_lettersNow);
@@ -638,5 +622,4 @@ public class UserPersonalPages extends AppCompatActivity {
         lettersAvilableStr += " " + Queries.getAvailableLetterCount(thisActivity, user_id);
         tvLettersAvailable.setText(lettersAvilableStr);
     }
-
 }
