@@ -80,6 +80,7 @@
     <string name="personal_page_2_lettersTotal">Total letters collected:</string>
     <string name="personal_page_2_lettersNow">Letters available to use:</string>
     <string name="personal_page_2_distanceWalked">Distance Walked:</string>
+    <string name="personal_page_all_swipe_hint">&lt;- Swipe Left/Right -&gt;</string>
 
 
 </resources>

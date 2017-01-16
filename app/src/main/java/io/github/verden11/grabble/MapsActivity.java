@@ -241,13 +241,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void updateUI() {
         Log.d(TAG, "updateUI");
-        double myLat = mCurrentLocation.getLatitude();
-        double myLng = mCurrentLocation.getLongitude();
-
-        if (mMap == null) {
+        if (mMap == null || mCurrentLocation == null) {
             return;
         }
 
+        double myLat = mCurrentLocation.getLatitude();
+        double myLng = mCurrentLocation.getLongitude();
 
         // remove old circle around users location
         if (circle != null) {
