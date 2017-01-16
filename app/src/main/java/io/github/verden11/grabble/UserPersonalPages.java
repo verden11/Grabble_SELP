@@ -14,8 +14,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.style.AlignmentSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.SuperscriptSpan;
 import android.util.Log;
@@ -26,9 +28,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -576,59 +580,25 @@ public class UserPersonalPages extends AppCompatActivity {
 
     }
 
+
     private static void populateWords(View view) {
         String allWords = Queries.getWords(thisActivity, user_id);
-        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ll_allWords);
-        totalScore = 0;
-        totalWords = 0;
-
+        ListView listView = (ListView) view.findViewById(R.id.ll_allwords);
+        ArrayList<General.WordScoreLine> objects = new ArrayList<General.WordScoreLine>();
         int wordCount = allWords.length() / 10;
+        totalScore = 0;
         totalWords = wordCount;
 
         for (int i = 0; i < wordCount; i++) {
-            LinearLayout ll = new LinearLayout(thisActivity);
-            ll.setLayoutParams(new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
-            ll.setOrientation(LinearLayout.HORIZONTAL);
-            ll.setPadding(0, 30, 0, 30);
-
-
-            View divider = new View(thisActivity);
-            divider.setLayoutParams(new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    3));
-            divider.setBackgroundColor(Color.BLACK);
-
-
-            TextView tv1 = new TextView(thisActivity);
-            tv1.setLayoutParams(new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
-            tv1.setPadding(50, 0, 0, 0);
-            String word = allWords.substring(i * 10, i * 10 + 10);
-            tv1.setText(word.substring(0, 7));
-
-
-            TextView tv2 = new TextView(thisActivity);
-            tv2.setLayoutParams(new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
-            tv2.setGravity(Gravity.RIGHT);
-            tv2.setPadding(0, 0, 50, 0);
-
-            int score = Integer.valueOf(word.substring(7, 10));
+            String fullWord = allWords.substring(i * 10, i * 10 + 10);
+            String word = fullWord.substring(0, fullWord.length() - 3);
+            int score = Integer.valueOf(fullWord.substring(7, 10));
+            General.WordScoreLine oneLine = new General.WordScoreLine(word, score + "");
             totalScore += score;
-            tv2.setText(score + "");
-
-
-            ll.addView(tv1);
-            ll.addView(tv2);
-
-
-            linearLayout.addView(ll);
-            linearLayout.addView(divider);
+            objects.add(oneLine);
         }
+        General.CustomAdapter customAdapter = new General.CustomAdapter(thisActivity, objects);
+        listView.setAdapter(customAdapter);
     }
 
     private static void populateStatistics(View view) {
