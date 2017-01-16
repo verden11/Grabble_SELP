@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
@@ -53,6 +54,8 @@ public class UserPersonalPages extends AppCompatActivity {
      */
     static EditText word_enter;
     static Button submit_word;
+    static Button backspace;
+    static List<Button> buttonsPressedToScrabble;
 
     // top row
     static Button letter_q;
@@ -306,7 +309,29 @@ public class UserPersonalPages extends AppCompatActivity {
      * Helpers
      */
     private static void populateKeyboard(View view) {
+        buttonsPressedToScrabble = new ArrayList<>();
         word_enter = (EditText) view.findViewById(R.id.et_word);
+        word_enter.setInputType(InputType.TYPE_NULL);
+        backspace = (Button) view.findViewById(R.id.b_backspace);
+        backspace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String wordEntered = word_enter.getText().toString();
+                char deleted;
+                if (!(wordEntered.isEmpty() || buttonsPressedToScrabble.isEmpty())) {
+                    // delete last char from word and increment count on keyboard
+                    Button b = buttonsPressedToScrabble.remove(buttonsPressedToScrabble.size() - 1);
+                    String bWithCount = b.getText().toString();
+                    int count = Integer.valueOf(bWithCount.substring(1, bWithCount.length()));
+                    count++;
+                    // update char count
+                    b.setText(getCharWithCount(b, count));
+                    // update word input
+                    wordEntered = wordEntered.substring(0, wordEntered.length() - 1);
+                    word_enter.setText(wordEntered);
+                }
+            }
+        });
         submit_word = (Button) view.findViewById(R.id.b_submit_word);
         submit_word.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -314,14 +339,12 @@ public class UserPersonalPages extends AppCompatActivity {
                 String wordToAdd = word_enter.getText().toString().toUpperCase();
                 if (wordToAdd.length() == 7 && dictionary.contains(wordToAdd)) {
                     int score = 0;
-
                     // check if user has enough letters
                     boolean enoughLettersInDB = true;
                     List<Character> charList = new ArrayList<>();
                     for (char ch : wordToAdd.toCharArray()) {
                         charList.add(ch);
                     }
-
 
                     while (charList.size() > 0) {
                         char ch = charList.get(0);
@@ -338,15 +361,24 @@ public class UserPersonalPages extends AppCompatActivity {
                             break;
                         }
                     }
+
                     if (enoughLettersInDB) {
                         Queries.saveWord(thisActivity, user_id, wordToAdd, score);
                         for (char ch : wordToAdd.toCharArray()) {
                             Queries.removeChar(thisActivity, user_id, ch);
                         }
                         addCountToLetters();
+                        buttonsPressedToScrabble.clear();
+                        word_enter.setText("");
                         Snackbar.make(view, "Word " + wordToAdd + " inserted", Snackbar.LENGTH_SHORT).show();
+                        // update words collected list fragment
                     }
-
+                } else {
+                    if (wordToAdd.length() < 7) {
+                        Snackbar.make(view, "You must enter 7 letters", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(view, "Word " + wordToAdd + " does not exist!", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -525,7 +557,6 @@ public class UserPersonalPages extends AppCompatActivity {
                 break;
             case R.id.b_letterM:
                 b = letter_m;
-
                 break;
             default:
                 b = null;
@@ -536,6 +567,7 @@ public class UserPersonalPages extends AppCompatActivity {
 
         String et_existing = word_enter.getText().toString();
         if (count > 0 && et_existing.length() < 7) {
+            buttonsPressedToScrabble.add(b);
             count--;
             b.setText(getCharWithCount(b, count));
             word_enter.setText(et_existing + ch);
