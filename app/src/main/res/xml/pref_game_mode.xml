@@ -2,7 +2,7 @@
 
     <SwitchPreference
         android:defaultValue="true"
-        android:key="example_switch"
+        android:key="battery_saving_mode_switch"
         android:summary="@string/pref_description_battery_saver"
         android:title="@string/pref_title_battery_saver" />
 
@@ -14,7 +14,7 @@
         android:defaultValue="-1"
         android:entries="@array/pref_difficulty_list_titles"
         android:entryValues="@array/pref_difficulty_list_values"
-        android:key="example_list"
+        android:key="difficulty_list"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="@string/pref_title_difficulty" />

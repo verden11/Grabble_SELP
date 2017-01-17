@@ -44,6 +44,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
+            Log.d(TAG, "onPreferenceChange");
             String stringValue = value.toString();
 
             if (preference instanceof ListPreference) {
@@ -94,6 +95,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * example, 10" tablets are extra-large.
      */
     private static boolean isXLargeTablet(Context context) {
+        Log.d(TAG, "isXLargeTablet");
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
@@ -108,6 +110,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * @see #sBindPreferenceSummaryToValueListener
      */
     private static void bindPreferenceSummaryToValue(Preference preference) {
+        Log.d(TAG, "bindPreferenceSummaryToValue");
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -130,6 +133,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
     private void setupActionBar() {
+        Log.d(TAG, "setupActionBar");
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Show the Up button in the action bar.
@@ -155,6 +159,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @Override
     public boolean onIsMultiPane() {
+        Log.d(TAG, "onIsMultiPane");
         return isXLargeTablet(this);
     }
 
@@ -173,9 +178,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * Make sure to deny any unknown fragments here.
      */
     protected boolean isValidFragment(String fragmentName) {
+        Log.d(TAG, "isValidFragment");
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+                || GameModeFragment.class.getName().equals(fragmentName)
+                || MapStyleFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -183,10 +189,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
+    public static class GameModeFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
-            Log.d(TAG, "GPF onCreate");
+            Log.d(TAG, "GMF onCreate");
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_game_mode);
             setHasOptionsMenu(true);
@@ -195,12 +201,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_list"));
+            bindPreferenceSummaryToValue(findPreference("difficulty_list"));
         }
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
-            Log.d(TAG, "GPF onOptionsItemSelected");
+            Log.d(TAG, "GMF onOptionsItemSelected");
             int id = item.getItemId();
             if (id == android.R.id.home) {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
@@ -215,10 +221,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class NotificationPreferenceFragment extends PreferenceFragment {
+    public static class MapStyleFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
-            Log.d(TAG, "NPF onCreate");
+            Log.d(TAG, "MSF onCreate");
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_map_style);
             setHasOptionsMenu(true);
@@ -232,7 +238,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
-            Log.d(TAG, "NPF onOptionsItemSelected");
+            Log.d(TAG, "MSF onOptionsItemSelected");
             int id = item.getItemId();
             if (id == android.R.id.home) {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
