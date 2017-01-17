@@ -227,7 +227,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged");
         //TODO calculate distance only if in 'Square'
-        distance_walked += mCurrentLocation.distanceTo(location);
+        if (mCurrentLocation != null){
+            distance_walked += mCurrentLocation.distanceTo(location);
+        }
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         if (mCurrentLocation != null) {
@@ -373,7 +375,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mGoogleApiClient);
                 updateUI();
                 // Move the camera instantly to last known location with a zoom
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 17));
+                if (mCurrentLocation != null) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 17));
+                }
             }
         }
 
