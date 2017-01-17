@@ -46,6 +46,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         public boolean onPreferenceChange(Preference preference, Object value) {
             Log.d(TAG, "onPreferenceChange");
             String stringValue = value.toString();
+            Log.d(TAG, stringValue);
 
             if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
@@ -202,6 +203,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("difficulty_list"));
+
+            PreferenceManager preferenceManager = getPreferenceManager();
+            if (preferenceManager.getSharedPreferences().getBoolean("battery_saving_mode_switch",true)){
+                Log.d(TAG, "true");
+            }else{
+                Log.d(TAG, "false");
+            }
         }
 
         @Override
