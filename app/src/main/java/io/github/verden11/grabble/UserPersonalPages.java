@@ -38,9 +38,10 @@ import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.Queries;
 
+import static io.github.verden11.grabble.Constants.Constants.user_id;
+
 public class UserPersonalPages extends AppCompatActivity {
     private final static String TAG = "UserPersonalPages";
-    private static int user_id;
     private static Activity thisActivity;
     private static String dictionary = "";
     private static int totalScore = 0;
@@ -111,11 +112,7 @@ public class UserPersonalPages extends AppCompatActivity {
         /**
          * Init variables
          */
-
         thisActivity = this;
-        // get the intent which started this activity
-        Intent intent = getIntent();
-        user_id = intent.getIntExtra(Constants.USER_ID, 0);
 
         // Load dictionary
 

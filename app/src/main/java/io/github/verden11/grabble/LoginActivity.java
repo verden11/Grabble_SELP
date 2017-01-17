@@ -182,7 +182,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "openMapsActivity");
         Intent intent = new Intent(this, MapsActivity.class);
         int user_id = Queries.getIdByEmail(this, mEmail);
-        intent.putExtra(Constants.USER_ID, user_id);
+        Constants.user_id = user_id;
         startActivity(intent);
     }
 

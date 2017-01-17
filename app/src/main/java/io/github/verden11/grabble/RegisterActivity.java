@@ -193,7 +193,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void openMapsActivity(String mEmail) {
         Intent intent = new Intent(this, MapsActivity.class);
         int user_id = Queries.getIdByEmail(this, mEmail);
-        intent.putExtra(Constants.USER_ID, user_id);
+        Constants.user_id = user_id;
         startActivity(intent);
     }
 

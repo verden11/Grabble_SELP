@@ -55,6 +55,8 @@ import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.PermissionHelper;
 import io.github.verden11.grabble.Helper.Queries;
 
+import static io.github.verden11.grabble.Constants.Constants.user_id;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     // Keys for storing activity state in the Bundle.
     protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
@@ -62,7 +64,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
     private final String TAG = "MapsActivity";
     private SQLiteDatabase db;
-    private int user_id;
     private float distance_walked;
     /**
      * Provides the entry point to Google Play services.
@@ -98,11 +99,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_maps);
         thisActivity = this;
-
-        // get the intent which started this activity
-        Intent intent = getIntent();
-        user_id = intent.getIntExtra(Constants.USER_ID, 0);
-
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PermissionHelper.checkLocationPermission(thisActivity);
