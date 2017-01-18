@@ -268,12 +268,10 @@ public class UserPersonalPages extends AppCompatActivity {
 
 
             switch (sectionNumb) {
-                //                View rootView;
                 case 1:
                     Log.d(TAG, "onCreateView 1 in switch");
                     rootView = inflater.inflate(R.layout.fragment_user_personal_pages_1, container, false);
                     populateKeyboard(rootView);
-
                     break;
                 case 2:
                     Log.d(TAG, "onCreateView 2 in switch");
@@ -283,13 +281,11 @@ public class UserPersonalPages extends AppCompatActivity {
                     break;
                 case 3:
                     Log.d(TAG, "onCreateView 3 in switch");
-                    rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
-                    //                    button.setText("3");
+                    rootView = inflater.inflate(R.layout.fragment_user_personal_pages_3, container, false);
                     break;
                 default:
-                    Log.d(TAG, "" +
-                            "View default");
-                    rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
+                    rootView = inflater.inflate(R.layout.fragment_user_personal_pages_1, container, false);
+                    populateKeyboard(rootView);
                     break;
             }
             return rootView;
