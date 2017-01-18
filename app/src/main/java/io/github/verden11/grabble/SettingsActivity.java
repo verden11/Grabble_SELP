@@ -205,11 +205,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             bindPreferenceSummaryToValue(findPreference("difficulty_list"));
 
             PreferenceManager preferenceManager = getPreferenceManager();
-            if (preferenceManager.getSharedPreferences().getBoolean("battery_saving_mode_switch",true)){
-                Log.d(TAG, "true");
-            }else{
-                Log.d(TAG, "false");
-            }
         }
 
         @Override
