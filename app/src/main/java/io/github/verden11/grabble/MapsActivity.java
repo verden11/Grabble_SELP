@@ -165,20 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "onMapReady");
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-
-        try {
-            // Customise the styling of the base map using a JSON object defined
-            // in a raw resource file.
-            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_night));
-
-            if (!success) {
-                Log.e("MapsActivityRaw", "Style parsing failed.");
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e("MapsActivityRaw", "Can't find style.", e);
-        }
-
+        checkMapStyle();
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -340,6 +327,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startLocationUpdates();
             }
         }
+        checkMapStyle();
     }
 
     @Override
@@ -588,6 +576,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // get only date (no hours/minutes/seconds needed)
             epoch = epoch - (epoch % 86400000L);
             Queries.saveKMLDownloadTime(thisActivity, user_id, epoch);
+        }
+    }
+
+    private void checkMapStyle() {
+        if (mMap != null) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(thisActivity);
+            int map_style = Integer.valueOf(preferences.getString("map_style", "0"));
+            Log.d(TAG, "map style @@@@ : " + map_style);
+            switch (map_style) {
+                case 1:
+                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_night));
+                    break;
+                case 2:
+                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_silver));
+                    break;
+                case 3:
+                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark));
+                    break;
+                case 4:
+                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_aubergine));
+                    break;
+                case 5:
+                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_retro));
+                    break;
+                default:
+                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_standard));
+                    break;
+            }
         }
     }
 }
