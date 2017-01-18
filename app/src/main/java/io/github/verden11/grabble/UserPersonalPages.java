@@ -2,6 +2,7 @@ package io.github.verden11.grabble;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -28,13 +29,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.Queries;
 
@@ -141,12 +142,32 @@ public class UserPersonalPages extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar snackbar = Snackbar.make(view, "Contact Developer", Snackbar.LENGTH_LONG);
+                snackbar.setAction("Send Email", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        sendEmail();
+                    }
+                });
+                snackbar.show();
             }
         });
     }
 
+    private void sendEmail() {
+
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:" + "dev@email.com"));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Grabble App");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello s1345382!");
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send email using..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(thisActivity, "No email clients installed.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
