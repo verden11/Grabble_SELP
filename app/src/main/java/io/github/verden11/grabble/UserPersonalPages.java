@@ -1,6 +1,7 @@
 package io.github.verden11.grabble;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -146,7 +148,22 @@ public class UserPersonalPages extends AppCompatActivity {
                 snackbar.setAction("Send Email", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        sendEmail();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+                        builder.setMessage(R.string.dialog_back_message)
+                                .setPositiveButton("Email Developer", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // Go back to Login screen
+                                        sendEmail("dev@email.com");
+                                    }
+                                })
+                                .setNegativeButton("Invite a Friend", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // Close the application
+                                        sendEmail("");
+                                    }
+                                });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                     }
                 });
                 snackbar.show();
@@ -154,12 +171,16 @@ public class UserPersonalPages extends AppCompatActivity {
         });
     }
 
-    private void sendEmail() {
+    private void sendEmail(String option) {
 
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.parse("mailto:" + "dev@email.com"));
+        emailIntent.setData(Uri.parse("mailto:" + option));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Grabble App");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello s1345382!");
+        if (option.isEmpty()) {
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello s1345382!");
+        } else {
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello Friend! Check out GRABBLE app!");
+        }
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send email using..."));
