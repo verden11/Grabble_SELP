@@ -225,7 +225,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged");
         //TODO calculate distance only if in 'Square'
-        if (mCurrentLocation != null){
+        if (mCurrentLocation != null) {
             distance_walked += mCurrentLocation.distanceTo(location);
         }
         mCurrentLocation = location;
@@ -248,6 +248,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (circle != null) {
             circle.remove();
         }
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(thisActivity);
+        int difficulty = Integer.valueOf(preferences.getString("difficulty_list", "-1"));
+        if (difficulty == 1) {
+            Constants.MAX_DISTANCE_TO_COLLECT_LETTER = 30;
+            Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE = 90;
+        } else if (difficulty == 0) {
+            Constants.MAX_DISTANCE_TO_COLLECT_LETTER = 20;
+            Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE = 70;
+        } else {
+            Constants.MAX_DISTANCE_TO_COLLECT_LETTER = 10;
+            Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE = 50;
+        }
+        Log.d(TAG, "difficulty " + difficulty);
 
         CircleOptions circleOptions = new CircleOptions()
                 .center(new LatLng(myLat, myLng))
