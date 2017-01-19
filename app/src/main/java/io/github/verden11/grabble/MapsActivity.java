@@ -199,6 +199,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String fullUrl = "http://www.inf.ed.ac.uk/teaching/courses/selp/coursework/" + dayLongName + ".kml";
             DownloadTask task = new DownloadTask();
             task.execute(fullUrl);
+            // new day - reset last days goal
+            Queries.setGoal(thisActivity, user_id, 0);
         } else {
             kmlMarkers = Queries.loadKML(thisActivity, user_id, mMap);
             if (mCurrentLocation != null) {
