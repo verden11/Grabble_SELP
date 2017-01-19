@@ -84,11 +84,8 @@
     <string name="title_activity_settings">Settings</string>
     <string name="personal_page_3_description">
         \n\n
-        <b>Create Word: </b> you will have to create a specific word!
+        <b>Walk Distance: </b> you will have to walk a certain amount of distance in KM 0 &lt; n &lt; 10
         \n\n
-        <b>Walk Distance: </b> you will have to walk a certain amount of distance in KM 0 &lt; n &lt; 10 (coming soon)
-        \n\n
-        <b>Collect &quot; n &quot; letters: </b> you will have to collect certain amount of letters (coming soon)
     </string>
 
     <!-- Strings related to Settings -->
