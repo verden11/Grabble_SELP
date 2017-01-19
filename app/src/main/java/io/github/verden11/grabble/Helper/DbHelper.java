@@ -7,10 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import io.github.verden11.grabble.Constants.Constants;
+
 public class DbHelper extends SQLiteOpenHelper {
     private static final String TAG = "DbHelperTAG";
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 11;
+    public static final int DATABASE_VERSION = 13;
     public static final String DATABASE_NAME = "Grabble.db";
 
 
@@ -22,6 +24,10 @@ public class DbHelper extends SQLiteOpenHelper {
         public static final String COLUMN_NICKNAME = "nickname";
         public static final String COLUMN_LAST_KML_DOWNLOAD_DATE = "last_kml_download";
         public static final String COLUMN_KML_LIST = "kml_object";
+        public static final String COLUMN_GOAL_SET = "goal_set";
+        public static final String COLUMN_DAY_WALKED = "walked_today";
+        public static final String COLUMN_DAY_LETTERS_COLLECTED = "collected_today";
+        public static final String COLUMN_WORD_OF_THE_DAY = "word_of_the_day";
     }
 
     /* Inner class that defines the Collection table */
@@ -146,7 +152,12 @@ public class DbHelper extends SQLiteOpenHelper {
                     UsersEntry.COLUMN_EMAIL + TEXT_TYPE + NOT_NULL + UNIQUE + COMMA_SEP +
                     UsersEntry.COLUMN_PASSWORD + TEXT_TYPE + NOT_NULL + COMMA_SEP +
                     UsersEntry.COLUMN_LAST_KML_DOWNLOAD_DATE + INT_TYPE + DEFAULT_0 + NOT_NULL + COMMA_SEP +
-                    UsersEntry.COLUMN_KML_LIST + TEXT_TYPE + DEFAULT_EMPTY + NOT_NULL + NOT_NULL + " )";
+                    UsersEntry.COLUMN_KML_LIST + TEXT_TYPE + DEFAULT_EMPTY + NOT_NULL + COMMA_SEP +
+                    UsersEntry.COLUMN_GOAL_SET + INT_TYPE + DEFAULT_0 + NOT_NULL + COMMA_SEP +
+                    UsersEntry.COLUMN_DAY_WALKED + INT_TYPE + DEFAULT_0 + NOT_NULL + COMMA_SEP +
+                    UsersEntry.COLUMN_DAY_LETTERS_COLLECTED + INT_TYPE + DEFAULT_0 + NOT_NULL + COMMA_SEP +
+                    UsersEntry.COLUMN_WORD_OF_THE_DAY + TEXT_TYPE + DEFAULT_EMPTY + NOT_NULL
+                    + " )";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + UsersEntry.TABLE_NAME;

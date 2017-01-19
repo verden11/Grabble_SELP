@@ -86,11 +86,10 @@
         \n\n
         <b>Create Word: </b> you will have to create a specific word!
         \n\n
-        <b>Walk Distance: </b> you will have to walk a certain amount of distance in KM 0 &lt; n &lt; 10
+        <b>Walk Distance: </b> you will have to walk a certain amount of distance in KM 0 &lt; n &lt; 10 (coming soon)
         \n\n
-        <b>Collect &quot; n &quot; letters: </b> you will have to collect certain amount of letters
+        <b>Collect &quot; n &quot; letters: </b> you will have to collect certain amount of letters (coming soon)
     </string>
-    <string name="personal_page_3_danger">Be careful! If you will not achieve your goal you will loose 10 points!</string>
 
     <!-- Strings related to Settings -->
 

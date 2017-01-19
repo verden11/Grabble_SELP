@@ -490,5 +490,52 @@ public class Queries {
         return ret;
     }
 
+    public static boolean isGoalSet(Activity activity, int user_id) {
+        int ret = 0;
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT " + DbHelper.UsersEntry.COLUMN_GOAL_SET +
+                " FROM " + DbHelper.UsersEntry.TABLE_NAME +
+                " WHERE " + DbHelper.UsersEntry._ID + " = " + user_id + ";", null);
+        try {
+            c.moveToFirst();
+            ret = c.getInt(0);
+        } finally {
+            c.close();
+            db.close();
+        }
+        return ret > 0;
+    }
+
+    public static void setGoal(Activity activity, int user_id, int goalInt) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put(DbHelper.UsersEntry.COLUMN_GOAL_SET, goalInt);
+            db.update(DbHelper.UsersEntry.TABLE_NAME, cv, "_id = " + user_id, null);
+        } finally {
+            db.close();
+        }
+    }
+
+
+    public static int getGoal(Activity activity, int user_id) {
+        int ret = 0;
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " + DbHelper.UsersEntry.COLUMN_GOAL_SET +
+                " FROM " + DbHelper.UsersEntry.TABLE_NAME +
+                " WHERE " + DbHelper.UsersEntry._ID + " = " + user_id + ";", null);
+        try {
+            c.moveToFirst();
+            ret = c.getInt(0);
+        } finally {
+            c.close();
+            db.close();
+        }
+        return ret;
+    }
+
 
 }

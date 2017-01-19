@@ -39,10 +39,4 @@
         android:text="SET GOAL" />
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/personal_page_3_danger"
-        android:textColor="@android:color/holo_red_dark" />
-
 </LinearLayout>

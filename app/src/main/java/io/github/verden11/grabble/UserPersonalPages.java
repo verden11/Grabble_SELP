@@ -44,7 +44,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.Queries;
 
-import static android.R.attr.max;
 import static io.github.verden11.grabble.Constants.Constants.user_id;
 
 public class UserPersonalPages extends AppCompatActivity {
@@ -122,7 +121,7 @@ public class UserPersonalPages extends AppCompatActivity {
          * Init variables
          */
         thisActivity = this;
-        daily_tasks = new String[]{"Create Word", "Walk Distance", "Collect 'n' letters", "Daily Task"};
+        daily_tasks = new String[]{"Walk 10km"};
 
         // Load dictionary
         try {
@@ -340,6 +339,10 @@ public class UserPersonalPages extends AppCompatActivity {
     private static void populateSpinner(View view) {
         spinner = (Spinner) view.findViewById(R.id.static_spinner);
         setGoal = (Button) view.findViewById(R.id.b_set_goal);
+        if (Queries.isGoalSet(thisActivity, user_id)) {
+            setGoal.setEnabled(false);
+            setGoal.setText("The Goal is already set!");
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(thisActivity, android.R.layout.simple_spinner_item, daily_tasks);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -347,9 +350,10 @@ public class UserPersonalPages extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int sp = spinner.getSelectedItemPosition();
-                String toastText = "";
+                String toastText;
+                int randomNum;
                 if (sp == 3) {
-                    int randomNum = 0;
+                    // Daily Task selected
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                         randomNum = ThreadLocalRandom.current().nextInt(0, 2 + 1);
                     } else {
@@ -358,8 +362,12 @@ public class UserPersonalPages extends AppCompatActivity {
                     toastText = daily_tasks[randomNum] + " Set As Goal!";
                 } else {
                     toastText = daily_tasks[sp] + " Set As Goal!";
+                    randomNum = sp;
                 }
                 Toast.makeText(thisActivity, toastText, Toast.LENGTH_SHORT).show();
+                Queries.setGoal(thisActivity, user_id, randomNum + 1);
+                setGoal.setEnabled(false);
+                setGoal.setText("The Goal is already set!");
             }
         });
     }

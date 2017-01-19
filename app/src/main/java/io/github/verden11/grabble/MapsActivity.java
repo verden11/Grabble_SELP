@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
@@ -22,6 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -67,6 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final String TAG = "MapsActivity";
     private SQLiteDatabase db;
     private float distance_walked;
+    private ProgressBar progressBar;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -102,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         thisActivity = this;
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PermissionHelper.checkLocationPermission(thisActivity);
         }
 
@@ -122,6 +123,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        progressBar = (ProgressBar) findViewById(R.id.goalProgressBar);
     }
 
 
@@ -199,6 +201,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String fullUrl = "http://www.inf.ed.ac.uk/teaching/courses/selp/coursework/" + dayLongName + ".kml";
             DownloadTask task = new DownloadTask();
             task.execute(fullUrl);
+            // new day - reset last days goal
+            Queries.setGoal(thisActivity, user_id, 0);
         } else {
             kmlMarkers = Queries.loadKML(thisActivity, user_id, mMap);
             if (mCurrentLocation != null) {
@@ -226,6 +230,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "updateUI");
         if (mMap == null || mCurrentLocation == null) {
             return;
+        }
+
+        if (Queries.isGoalSet(thisActivity, user_id)) {
+            int goal = Queries.getGoal(thisActivity, user_id);
+            switch (goal) {
+                case 1:
+                    // Walk word
+                    int progress = (int) (distance_walked / 100);
+                    progressBar.setProgress(progress);
+                    break;
+            }
+            Log.d(TAG, "distance walked : " + distance_walked);
         }
 
         double myLat = mCurrentLocation.getLatitude();

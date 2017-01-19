@@ -17,4 +17,10 @@
         android:paddingRight="10dp"
         android:text="@string/show_collection" />
 
+    <ProgressBar
+        android:id="@+id/goalProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 </fragment>
