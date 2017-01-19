@@ -33,6 +33,7 @@
         android:text="@string/personal_page_3_description" />
 
     <Button
+        android:id="@+id/b_set_goal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="SET GOAL" />

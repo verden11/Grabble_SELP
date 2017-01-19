@@ -53,6 +53,7 @@ public class UserPersonalPages extends AppCompatActivity {
     private static int totalWords = 0;
     private static Spinner spinner;
     private static String[] daily_tasks;
+    private static Button setGoal;
     /**
      * Declare variables for 'keyboard' buttons
      * where all letters are displayed
@@ -119,9 +120,9 @@ public class UserPersonalPages extends AppCompatActivity {
          * Init variables
          */
         thisActivity = this;
+        daily_tasks = new String[]{"Create Word", "Walk Distance", "Collect 'n' letters", "Daily Task"};
 
         // Load dictionary
-
         try {
             InputStream is = this.getResources().openRawResource(R.raw.grabble);
             dictionary = General.convertStreamToString(is).toUpperCase();
@@ -246,7 +247,6 @@ public class UserPersonalPages extends AppCompatActivity {
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
-
             return fragment;
         }
 
@@ -337,10 +337,19 @@ public class UserPersonalPages extends AppCompatActivity {
 
     private static void populateSpinner(View view) {
         spinner = (Spinner) view.findViewById(R.id.static_spinner);
+        setGoal = (Button) view.findViewById(R.id.b_set_goal);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(thisActivity, android.R.layout.simple_spinner_item, daily_tasks);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        //spinner.getSelectedItemPosition();
+        setGoal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int sp = spinner.getSelectedItemPosition();
+                String toastText = daily_tasks[sp] + " Set As Goal!";
+                Toast.makeText(thisActivity, toastText, Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
     }
 
