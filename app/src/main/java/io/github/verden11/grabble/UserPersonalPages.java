@@ -39,10 +39,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.Queries;
 
+import static android.R.attr.max;
 import static io.github.verden11.grabble.Constants.Constants.user_id;
 
 public class UserPersonalPages extends AppCompatActivity {
@@ -345,12 +347,21 @@ public class UserPersonalPages extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int sp = spinner.getSelectedItemPosition();
-                String toastText = daily_tasks[sp] + " Set As Goal!";
+                String toastText = "";
+                if (sp == 3) {
+                    int randomNum = 0;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        randomNum = ThreadLocalRandom.current().nextInt(0, 2 + 1);
+                    } else {
+                        randomNum = 0;
+                    }
+                    toastText = daily_tasks[randomNum] + " Set As Goal!";
+                } else {
+                    toastText = daily_tasks[sp] + " Set As Goal!";
+                }
                 Toast.makeText(thisActivity, toastText, Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
 
