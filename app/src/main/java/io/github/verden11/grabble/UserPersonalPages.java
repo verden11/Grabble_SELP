@@ -27,9 +27,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +51,8 @@ public class UserPersonalPages extends AppCompatActivity {
     private static String dictionary = "";
     private static int totalScore = 0;
     private static int totalWords = 0;
-
+    private static Spinner spinner;
+    private static String[] daily_tasks;
     /**
      * Declare variables for 'keyboard' buttons
      * where all letters are displayed
@@ -258,15 +261,8 @@ public class UserPersonalPages extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             int sectionNumb = getArguments().getInt(ARG_SECTION_NUMBER);
             Log.d(TAG, "onCreateView " + sectionNumb);
-            //            View rootView = inflater.inflate(R.layout.fragment_user_personal_pages, container, false);
-            //            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            //            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            //
-            //            Button button = (Button) rootView.findViewById(R.id.b_first);
 
             View rootView;
-
-
             switch (sectionNumb) {
                 case 1:
                     Log.d(TAG, "onCreateView 1 in switch");
@@ -282,6 +278,7 @@ public class UserPersonalPages extends AppCompatActivity {
                 case 3:
                     Log.d(TAG, "onCreateView 3 in switch");
                     rootView = inflater.inflate(R.layout.fragment_user_personal_pages_3, container, false);
+                    populateSpinner(rootView);
                     break;
                 default:
                     rootView = inflater.inflate(R.layout.fragment_user_personal_pages_1, container, false);
@@ -290,6 +287,7 @@ public class UserPersonalPages extends AppCompatActivity {
             }
             return rootView;
         }
+
     }
 
     /**
@@ -334,6 +332,16 @@ public class UserPersonalPages extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+
+    private static void populateSpinner(View view) {
+        spinner = (Spinner) view.findViewById(R.id.static_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(thisActivity, android.R.layout.simple_spinner_item, daily_tasks);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        //spinner.getSelectedItemPosition();
+
     }
 
 

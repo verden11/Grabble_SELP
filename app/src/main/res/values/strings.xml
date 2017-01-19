@@ -82,6 +82,15 @@
     <string name="personal_page_2_distanceWalked">Distance Walked:</string>
     <string name="personal_page_all_swipe_hint">&lt;- Swipe Left/Right -&gt;</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="personal_page_3_description">
+        \n\n
+        <b>Create Word: </b> you will have to create a specific word!
+        \n\n
+        <b>Walk Distance: </b> you will have to walk a certain amount of distance in KM 0 &lt; n &lt; 10
+        \n\n
+        <b>Collect &quot; n &quot; letters: </b> you will have to collect certain amount of letters
+    </string>
+    <string name="personal_page_3_danger">Be careful! If you will not achieve your goal you will loose 10 points!</string>
 
     <!-- Strings related to Settings -->
 
