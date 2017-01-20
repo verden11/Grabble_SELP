@@ -213,6 +213,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             task.execute(fullUrl);
             // new day - reset last days goal
             Queries.setGoal(thisActivity, user_id, 0);
+            Queries.setGoalAchieved(thisActivity, user_id, 0);
         } else {
             kmlMarkers = Queries.loadKML(thisActivity, user_id, mMap);
             if (mCurrentLocation != null) {
@@ -252,9 +253,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     int progress = (int) (distance_walked / 100);
                     progressBar.setProgress(progress);
                     if (progress > 99) {
-                        Queries.setGoalAchieved(thisActivity, user_id);
+                        Queries.setGoalAchieved(thisActivity, user_id, 2);
                         isGoalAchieved = true;
-
                     }
                     break;
             }

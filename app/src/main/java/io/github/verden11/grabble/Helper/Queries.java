@@ -610,12 +610,12 @@ public class Queries {
         return ret > 0;
     }
 
-    public static void setGoalAchieved(Activity activity, int user_id) {
+    public static void setGoalAchieved(Activity activity, int user_id, int achieved) {
         DbHelper mDbHelper = new DbHelper(activity);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         try {
-            cv.put(DbHelper.UsersEntry.COLUMN_GOAL_SET, 2);
+            cv.put(DbHelper.UsersEntry.COLUMN_GOAL_ACHIEVED, achieved);
             db.update(DbHelper.UsersEntry.TABLE_NAME, cv, "_id = " + user_id, null);
         } finally {
             db.close();
