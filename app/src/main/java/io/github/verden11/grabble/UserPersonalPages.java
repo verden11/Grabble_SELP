@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.Queries;
 
@@ -149,21 +150,21 @@ public class UserPersonalPages extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar snackbar = Snackbar.make(view, "Contact Developer", Snackbar.LENGTH_LONG);
-                snackbar.setAction("Send Email", new View.OnClickListener() {
+                Snackbar snackbar = Snackbar.make(view, R.string.fab_contact, Snackbar.LENGTH_LONG);
+                snackbar.setAction(R.string.fab_action, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
                         builder.setMessage(R.string.dialog_back_message)
-                                .setPositiveButton("Email Developer", new DialogInterface.OnClickListener() {
+                                .setPositiveButton(R.string.fab_email_dev, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        // Go back to Login screen
-                                        sendEmail("dev@email.com");
+                                        // Contact Dev, email can be changes in Constants Class
+                                        sendEmail(Constants.DEV_EMAIL);
                                     }
                                 })
-                                .setNegativeButton("Invite a Friend", new DialogInterface.OnClickListener() {
+                                .setNegativeButton(R.string.fab_invite, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        // Close the application
+                                        // User will have to enter email address manually
                                         sendEmail("");
                                     }
                                 });
@@ -180,17 +181,17 @@ public class UserPersonalPages extends AppCompatActivity {
 
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
         emailIntent.setData(Uri.parse("mailto:" + option));
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Grabble App");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.send_email_subject);
         if (option.isEmpty()) {
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello s1345382!");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, R.string.send_email_body_dev);
         } else {
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello Friend! Check out GRABBLE app!");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, R.string.send_email_body_friend);
         }
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send email using..."));
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(thisActivity, "No email clients installed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(thisActivity, R.string.send_email_error, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -270,13 +271,13 @@ public class UserPersonalPages extends AppCompatActivity {
                     rootView = inflater.inflate(R.layout.fragment_user_personal_pages_1, container, false);
                     populateKeyboard(rootView);
                     break;
-                case 2:
+                case 3:
                     Log.d(TAG, "onCreateView 2 in switch");
                     rootView = inflater.inflate(R.layout.fragment_user_personal_pages_2, container, false);
                     populateWords(rootView);
                     populateStatistics(rootView);
                     break;
-                case 3:
+                case 2:
                     Log.d(TAG, "onCreateView 3 in switch");
                     rootView = inflater.inflate(R.layout.fragment_user_personal_pages_3, container, false);
                     populateSpinner(rootView);
@@ -341,7 +342,7 @@ public class UserPersonalPages extends AppCompatActivity {
         setGoal = (Button) view.findViewById(R.id.b_set_goal);
         if (Queries.isGoalSet(thisActivity, user_id)) {
             setGoal.setEnabled(false);
-            setGoal.setText("The Goal is already set!");
+            setGoal.setText(R.string.goal_set);
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(thisActivity, android.R.layout.simple_spinner_item, daily_tasks);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -367,7 +368,7 @@ public class UserPersonalPages extends AppCompatActivity {
                 Toast.makeText(thisActivity, toastText, Toast.LENGTH_SHORT).show();
                 Queries.setGoal(thisActivity, user_id, randomNum + 1);
                 setGoal.setEnabled(false);
-                setGoal.setText("The Goal is already set!");
+                setGoal.setText(R.string.goal_set);
             }
         });
     }

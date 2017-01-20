@@ -237,8 +237,8 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
             if (success) {
+                // open map, login was a success
                 openMapsActivity(mEmail);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -256,6 +256,7 @@ public class LoginActivity extends AppCompatActivity {
     public void register(View view) {
         Log.d(TAG, "register");
         Intent i = new Intent(this, RegisterActivity.class);
+        // start register activity
         startActivity(i);
     }
 }

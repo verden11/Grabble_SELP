@@ -3,7 +3,7 @@
     <string name="title_activity_maps">Map</string>
 
     <string name="map_recenter">Recenter</string>
-    <string name="show_collection">Collection</string>
+    <string name="show_collection">Collection and Stats</string>
     <string name="title_activity_user_personal_pages">Collection</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
@@ -87,6 +87,23 @@
         <b>Walk Distance: </b> you will have to walk a certain amount of distance in KM 0 &lt; n &lt; 10
         \n\n
     </string>
+
+
+    <!-- Strings for Floating Action Button in User Personal pages -->
+    <string name="fab_action">Send Email</string>
+    <string name="fab_contact">Contact Developer</string>
+    <string name="fab_email_dev">Email Developer</string>
+    <string name="fab_invite">Invite a Friend</string>
+
+    <!-- Strings for sending email -->
+    <string name="send_email_subject">Grabble App</string>
+    <string name="send_email_body_dev">Hello s1345382!</string>
+    <string name="send_email_body_friend">Hello Friend! Check out GRABBLE app!</string>
+    <string name="send_email_error">No email clients installed.</string>
+
+    <!-- Strings for Goals -->
+    <string name="goal_set">The Goal is already set!</string>
+
 
     <!-- Strings related to Settings -->
 

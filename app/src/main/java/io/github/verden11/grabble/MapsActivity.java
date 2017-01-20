@@ -599,7 +599,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mMap != null) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(thisActivity);
             int map_style = Integer.valueOf(preferences.getString("map_style", "0"));
-            Log.d(TAG, "map style @@@@ : " + map_style);
             switch (map_style) {
                 case 1:
                     mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_night));

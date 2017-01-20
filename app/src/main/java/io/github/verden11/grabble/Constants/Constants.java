@@ -6,8 +6,8 @@ public class Constants {
     /**
      * Constants for passing variables using intents
      */
-    public static final String USER_EMAIL = "user_email";
     public static final String USER_ID = "user_id";
+    public static final String DEV_EMAIL = "your@email.com";
     public static int user_id;
 
     /**
@@ -28,6 +28,7 @@ public class Constants {
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     /**
      * The distance value in meters for a letter to be collected
+     * these values will be changed depending on users settings
      */
     public static int MAX_DISTANCE_TO_COLLECT_LETTER = 10;
 

@@ -38,5 +38,13 @@
         android:layout_height="wrap_content"
         android:text="SET GOAL" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="30dp"
+        android:text="@string/personal_page_all_swipe_hint"
+        android:textAlignment="center" />
+
 
 </LinearLayout>
