@@ -86,4 +86,13 @@ public class General {
         }
     }
 
+
+    public static int calculateWordValue(String word) {
+        int score = 0;
+        for (int i = 0; i < word.length(); i++) {
+            score += Queries.getCharValue(word.charAt(i));
+        }
+        return score;
+    }
+
 }

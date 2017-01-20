@@ -407,7 +407,7 @@ public class UserPersonalPages extends AppCompatActivity {
             public void onClick(View view) {
                 String wordToAdd = word_enter.getText().toString().toUpperCase();
                 if (wordToAdd.length() == 7 && dictionary.contains(wordToAdd)) {
-                    int score = 0;
+                    int score = General.calculateWordValue(wordToAdd);
                     // check if user has enough letters
                     boolean enoughLettersInDB = true;
                     List<Character> charList = new ArrayList<>();
@@ -420,9 +420,7 @@ public class UserPersonalPages extends AppCompatActivity {
                         int count = 0;
                         while (charList.contains(ch)) {
                             count++;
-                            score += Queries.getCharValue(ch);
                             charList.remove(charList.indexOf(Character.valueOf(ch)));
-
                         }
                         int countInDB = Queries.getCharCount(thisActivity, user_id, ch);
                         if (count > countInDB) {

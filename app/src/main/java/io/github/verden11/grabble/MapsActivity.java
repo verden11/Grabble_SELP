@@ -68,6 +68,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private SQLiteDatabase db;
     private float distance_walked;
     private ProgressBar progressBar;
+    private boolean isGoalSet = false;
+    private boolean isGoalAchieved = false;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -123,7 +125,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        // check if the Goal is set
+        isGoalSet = Queries.isGoalSet(thisActivity, user_id);
+        isGoalAchieved = Queries.isGoalAchieved(thisActivity, user_id);
         progressBar = (ProgressBar) findViewById(R.id.goalProgressBar);
+        if (isGoalAchieved) {
+            progressBar.setProgress(100);
+        }
     }
 
 
@@ -232,17 +242,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        if (Queries.isGoalSet(thisActivity, user_id)) {
+
+        if (isGoalSet && !isGoalAchieved) {
             int goal = Queries.getGoal(thisActivity, user_id);
             switch (goal) {
                 case 1:
                     // Walk word
+                    Log.d(TAG, "Distance walked: " + distance_walked + " meters.");
                     int progress = (int) (distance_walked / 100);
                     progressBar.setProgress(progress);
+                    if (progress > 99) {
+                        Queries.setGoalAchieved(thisActivity, user_id);
+                        isGoalAchieved = true;
+
+                    }
                     break;
             }
-            Log.d(TAG, "distance walked : " + distance_walked);
         }
+
 
         double myLat = mCurrentLocation.getLatitude();
         double myLng = mCurrentLocation.getLongitude();
@@ -344,6 +361,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
         checkMapStyle();
+        isGoalSet = Queries.isGoalSet(thisActivity, user_id);
+        isGoalAchieved = Queries.isGoalAchieved(thisActivity, user_id);
     }
 
     @Override
@@ -360,9 +379,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "stopLocationUpdates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         if (!collected_chars.isEmpty()) {
-            for (char ch : collected_chars) {
-                Queries.addChar(thisActivity, user_id, ch);
-            }
+            Queries.addChar(thisActivity, user_id, collected_chars);
             // clear list as all data was saved in DB
             collected_chars.clear();
         }
