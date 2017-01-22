@@ -12,7 +12,7 @@ import io.github.verden11.grabble.Constants.Constants;
 public class DbHelper extends SQLiteOpenHelper {
     private static final String TAG = "DbHelperTAG";
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 14;
+    public static final int DATABASE_VERSION = 15;
     public static final String DATABASE_NAME = "Grabble.db";
 
 
@@ -29,6 +29,15 @@ public class DbHelper extends SQLiteOpenHelper {
         public static final String COLUMN_DAY_WALKED = "walked_today";
         public static final String COLUMN_DAY_LETTERS_COLLECTED = "collected_today";
         public static final String COLUMN_WORD_OF_THE_DAY = "word_of_the_day";
+    }
+
+    /* Inner class that defines the settings table contents */
+    public static class UsersSettings implements BaseColumns {
+        public static final String TABLE_NAME = "settings";
+        public static final String COLUMN_USER_ID = "user_id";
+        public static final String COLUMN_BATTERY_SAVER = "battery_saver";
+        public static final String COLUMN_GAME_DIFFICULTY = "difficulty";
+        public static final String COLUMN_MAP_STYLE = "map_style";
     }
 
     /* Inner class that defines the Collection table */
@@ -84,6 +93,8 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(TAG, SQL_CREATE_ENTRIES);
         db.execSQL(SQL_CREATE_STATS);
         Log.d(TAG, SQL_CREATE_STATS);
+        db.execSQL(SQL_CREATE_SETTINGS);
+
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -160,6 +171,14 @@ public class DbHelper extends SQLiteOpenHelper {
                     UsersEntry.COLUMN_DAY_LETTERS_COLLECTED + INT_TYPE + DEFAULT_0 + NOT_NULL + COMMA_SEP +
                     UsersEntry.COLUMN_WORD_OF_THE_DAY + TEXT_TYPE + DEFAULT_EMPTY + NOT_NULL
                     + " )";
+
+    private static final String SQL_CREATE_SETTINGS =
+            "CREATE TABLE " + UsersSettings.TABLE_NAME + " (" +
+                    UsersSettings.COLUMN_USER_ID + " INTEGER PRIMARY KEY REFERENCES " + UsersEntry.TABLE_NAME + "(" + UsersEntry._ID + ")," +
+                    UsersSettings.COLUMN_BATTERY_SAVER + INT_TYPE + DEFAULT_0 + NOT_NULL + COMMA_SEP +
+                    UsersSettings.COLUMN_GAME_DIFFICULTY + INT_TYPE + DEFAULT_0 + NOT_NULL + COMMA_SEP +
+                    UsersSettings.COLUMN_MAP_STYLE + INT_TYPE + DEFAULT_0 +
+                    " )";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + UsersEntry.TABLE_NAME;

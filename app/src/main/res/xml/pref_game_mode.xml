@@ -1,7 +1,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="battery_saving_mode_switch"
         android:summary="@string/pref_description_battery_saver"
         android:title="@string/pref_title_battery_saver" />
@@ -11,7 +11,7 @@
          dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <ListPreference
-        android:defaultValue="-1"
+        android:defaultValue="0"
         android:entries="@array/pref_difficulty_list_titles"
         android:entryValues="@array/pref_difficulty_list_values"
         android:key="difficulty_list"

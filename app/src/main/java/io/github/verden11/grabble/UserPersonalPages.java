@@ -3,8 +3,10 @@ package io.github.verden11.grabble;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -111,6 +113,12 @@ public class UserPersonalPages extends AppCompatActivity {
     private ViewPager mViewPager;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        saveSettings();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
@@ -132,6 +140,8 @@ public class UserPersonalPages extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        saveSettings();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -175,6 +185,15 @@ public class UserPersonalPages extends AppCompatActivity {
                 snackbar.show();
             }
         });
+    }
+
+    private void saveSettings() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(thisActivity);
+        int map_style = Integer.valueOf(preferences.getString("map_style", "0"));
+        int battery_saver = preferences.getBoolean("battery_saving_mode_switch", false) ? 1 : 0;
+        int game_difficulty = Integer.valueOf(preferences.getString("difficulty_list", "0"));
+        int[] settings = {battery_saver, game_difficulty, map_style};
+        Queries.setSettings(thisActivity, user_id, settings);
     }
 
     private void sendEmail(String option) {

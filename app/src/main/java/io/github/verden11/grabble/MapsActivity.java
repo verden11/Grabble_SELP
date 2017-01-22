@@ -70,6 +70,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ProgressBar progressBar;
     private boolean isGoalSet = false;
     private boolean isGoalAchieved = false;
+
+    /**
+     * Settings array
+     * settings[0] = battery saver
+     * settings[1] = game difficulty
+     * settings[2] = map style
+     */
+    private int[] settings;
     /**
      * Provides the entry point to Google Play services.
      */
@@ -104,7 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_maps);
         thisActivity = this;
-
+        getSettings();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PermissionHelper.checkLocationPermission(thisActivity);
         }
@@ -270,7 +278,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(thisActivity);
-        int difficulty = Integer.valueOf(preferences.getString("difficulty_list", "-1"));
+        int difficulty = settings[1];
         if (difficulty == 1) {
             Constants.MAX_DISTANCE_TO_COLLECT_LETTER = 30;
             Constants.MAX_DISTANCE_TO_MAKE_MARKER_VISIBLE = 90;
@@ -340,6 +348,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
+        getSettings();
+        Log.d(TAG, "settings: Battery saver " + settings[0] + " difficulty " + settings[1] + " map style " + settings[2]);
     }
 
     @Override
@@ -360,6 +370,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startLocationUpdates();
             }
         }
+        getSettings();
         checkMapStyle();
         isGoalSet = Queries.isGoalSet(thisActivity, user_id);
         isGoalAchieved = Queries.isGoalAchieved(thisActivity, user_id);
@@ -373,7 +384,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
         }
+        getSettings();
     }
+
 
     protected void stopLocationUpdates() {
         Log.d(TAG, "stopLocationUpdates");
@@ -394,8 +407,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(Constants.UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(Constants.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(thisActivity);
-        if (preferences.getBoolean("battery_saving_mode_switch", true)) {
+        if (settings[0] == 1) {
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         } else {
             mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -427,6 +439,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "onConnected");
         createLocationRequest();
         startLocationUpdates();
+    }
+
+    private void getSettings() {
+        settings = Queries.getSettings(thisActivity, user_id);
+        Log.d(TAG, "Settings");
     }
 
     @Override
@@ -614,9 +631,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void checkMapStyle() {
         if (mMap != null) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(thisActivity);
-            int map_style = Integer.valueOf(preferences.getString("map_style", "0"));
-            switch (map_style) {
+            switch (settings[2]) {
                 case 1:
                     mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_night));
                     break;

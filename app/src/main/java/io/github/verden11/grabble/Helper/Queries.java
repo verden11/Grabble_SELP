@@ -60,12 +60,18 @@ public class Queries {
             // Insert the new row, returning the primary key value of the new row
             long rowID = db.insert(DbHelper.UsersEntry.TABLE_NAME, null, valuesUser);
 
+            // set default statistics
             ContentValues valuesStats = new ContentValues();
             valuesStats.put(DbHelper.Stats.COLUMN_USER_ID, rowID);
             valuesStats.put(DbHelper.Stats.COLUMN_DISTANCE_WALKED, 0);
             valuesStats.put(DbHelper.Stats.COLUMN_WORDS, "");
             valuesStats.put(DbHelper.Stats.COLUMN_SCORE, 0);
             db.insert(DbHelper.Stats.TABLE_NAME, null, valuesStats);
+
+            // set default settings
+            ContentValues valuesSettings = new ContentValues();
+            valuesSettings.put(DbHelper.UsersSettings.COLUMN_USER_ID, rowID);
+            db.insert(DbHelper.UsersSettings.TABLE_NAME, null, valuesSettings);
         } finally {
             db.close();
         }
@@ -622,5 +628,39 @@ public class Queries {
         }
     }
 
+
+    // Queries for settings
+    public static int[] getSettings(Activity activity, int user_id) {
+        int ret[] = {0, 0, 0};
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " + "*" +
+                " FROM " + DbHelper.UsersSettings.TABLE_NAME +
+                " WHERE " + DbHelper.UsersSettings.COLUMN_USER_ID + " = " + user_id + ";", null);
+        try {
+            c.moveToFirst();
+            ret[0] = c.getInt(1);
+            ret[1] = c.getInt(2);
+            ret[2] = c.getInt(3);
+        } finally {
+            c.close();
+            db.close();
+        }
+        return ret;
+    }
+
+    public static void setSettings(Activity activity, int user_id, int[] settings) {
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put(DbHelper.UsersSettings.COLUMN_BATTERY_SAVER, settings[0]);
+            cv.put(DbHelper.UsersSettings.COLUMN_GAME_DIFFICULTY, settings[1]);
+            cv.put(DbHelper.UsersSettings.COLUMN_MAP_STYLE, settings[2]);
+            db.update(DbHelper.UsersSettings.TABLE_NAME, cv, "user_id = " + user_id, null);
+        } finally {
+            db.close();
+        }
+    }
 
 }
