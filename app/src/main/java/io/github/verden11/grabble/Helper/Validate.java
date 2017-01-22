@@ -12,8 +12,7 @@ public class Validate {
     }
 
     public static boolean isPasswordValid(String password) {
-        // TODO: better password security
-        return password.length() > 5;
+        return password.length() > 6;
     }
 
 }

@@ -54,8 +54,10 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.verden11.grabble.Constants.Constants;
+import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.PermissionHelper;
 import io.github.verden11.grabble.Helper.Queries;
+import io.github.verden11.grabble.Helper.Validate;
 
 import static io.github.verden11.grabble.Constants.Constants.user_id;
 
@@ -247,8 +249,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged");
         //TODO calculate distance only if in 'Square'
-        if (mCurrentLocation != null) {
+        if (mCurrentLocation != null && General.isInPlaySquare(mCurrentLocation)) {
             distance_walked += mCurrentLocation.distanceTo(location);
+            Log.d(TAG, "Distance Walked " + distance_walked);
         }
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
@@ -283,6 +286,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         double myLat = mCurrentLocation.getLatitude();
         double myLng = mCurrentLocation.getLongitude();
+        Log.d("LatLng lat", myLat + "");
+        Log.d("LatLng lng", myLng + "");
 
         // remove old circle around users location
         if (circle != null) {

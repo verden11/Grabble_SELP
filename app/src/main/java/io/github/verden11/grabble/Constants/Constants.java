@@ -4,10 +4,26 @@ package io.github.verden11.grabble.Constants;
 public class Constants {
 
     /**
+     * Constance for coordinates where the game is playable
+     */
+    public static final float ForestHill_lat = (float) 55.946233;
+    public static final float ForestHill_lng = (float) -3.192473;
+
+    public static final float KFC_lat = (float) 55.946233;
+    public static final float KFC_lng = (float) -3.184319;
+
+    public static final float Top_Meadows_lat = (float) 55.942617;
+    public static final float Top_Meadows_lng = (float) 3.192473;
+
+    public static final float Buccleuch_lat = (float) 55.942617;
+    public static final float Buccleuch_lng = (float) -3.184319;
+
+
+    /**
      * Constants for passing variables using intents
      */
     public static final String USER_ID = "user_id";
-    public static final String DEV_EMAIL = "your@email.com";
+    public static final String DEV_EMAIL = "your@email.com"; // email for contacting developer
     public static int user_id;
 
     /**

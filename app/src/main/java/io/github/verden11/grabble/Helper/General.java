@@ -1,14 +1,18 @@
 package io.github.verden11.grabble.Helper;
 
 import android.content.Context;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
+import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.R;
 
 /**
@@ -93,6 +97,18 @@ public class General {
             score += Queries.getCharValue(word.charAt(i));
         }
         return score;
+    }
+
+    public static boolean isInPlaySquare(Location location) {
+        float lng = (float) location.getLongitude();
+        float lat = (float) location.getLatitude();
+
+        if (lat <= Constants.ForestHill_lat && lat >= Constants.Top_Meadows_lat
+                && lng >= Constants.Top_Meadows_lng && lng <= Constants.Buccleuch_lng) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
