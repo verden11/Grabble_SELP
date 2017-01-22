@@ -2,7 +2,6 @@ package io.github.verden11.grabble;
 
 import org.junit.Test;
 
-import java.util.concurrent.ExecutionException;
 
 import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.Validate;
@@ -12,7 +11,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import android.util.Patterns;
 
 /**
  * Example local unit test, which will execute on the development machine (host).

@@ -57,7 +57,6 @@ import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.Helper.General;
 import io.github.verden11.grabble.Helper.PermissionHelper;
 import io.github.verden11.grabble.Helper.Queries;
-import io.github.verden11.grabble.Helper.Validate;
 
 import static io.github.verden11.grabble.Constants.Constants.user_id;
 
