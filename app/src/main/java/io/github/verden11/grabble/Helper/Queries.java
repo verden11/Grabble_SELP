@@ -663,4 +663,36 @@ public class Queries {
         }
     }
 
+
+    public static int getWalkedToday(Activity activity, int user_id) {
+        int ret = 0;
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT " + DbHelper.UsersEntry.COLUMN_DAY_WALKED +
+                " FROM " + DbHelper.UsersEntry.TABLE_NAME +
+                " WHERE " + DbHelper.UsersEntry._ID + " = " + user_id + ";", null);
+        try {
+            c.moveToFirst();
+            ret = c.getInt(0);
+        } finally {
+            c.close();
+            db.close();
+        }
+        return ret;
+    }
+
+    public static void updateDistanceWalkedToday(Activity activity, int user_id, int distance) {
+        int alreadyWalked = getWalkedToday(activity, user_id);
+        int totalWalked = alreadyWalked + distance;
+        DbHelper mDbHelper = new DbHelper(activity);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put(DbHelper.UsersEntry.COLUMN_DAY_WALKED, totalWalked);
+            db.update(DbHelper.UsersEntry.TABLE_NAME, cv, "_id = " + user_id, null);
+        } finally {
+            db.close();
+        }
+    }
+
 }

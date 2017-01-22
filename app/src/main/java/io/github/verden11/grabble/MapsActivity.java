@@ -222,6 +222,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // new day - reset last days goal
             Queries.setGoal(thisActivity, user_id, 0);
             Queries.setGoalAchieved(thisActivity, user_id, 0);
+            Queries.updateDistanceWalkedToday(thisActivity, user_id, 0);
         } else {
             kmlMarkers = Queries.loadKML(thisActivity, user_id, mMap);
             if (mCurrentLocation != null) {
@@ -258,7 +259,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 case 1:
                     // Walk word
                     Log.d(TAG, "Distance walked: " + distance_walked + " meters.");
-                    int progress = (int) (distance_walked / 100);
+                    int progress = (int) (Queries.getWalkedToday(thisActivity, user_id) / 100);
                     progressBar.setProgress(progress);
                     if (progress > 99) {
                         Queries.setGoalAchieved(thisActivity, user_id, 2);
@@ -398,6 +399,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         Queries.saveKML(thisActivity, user_id, kmlMarkers);
         Queries.updateDistanceWalked(thisActivity, user_id, distance_walked);
+        Queries.updateDistanceWalkedToday(thisActivity, user_id, (int) distance_walked);
         // TODO not sure if this reset needed
         distance_walked = 0;
     }
