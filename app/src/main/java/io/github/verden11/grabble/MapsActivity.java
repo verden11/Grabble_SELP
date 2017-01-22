@@ -113,6 +113,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         thisActivity = this;
         getSettings();
+        setSettings();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PermissionHelper.checkLocationPermission(thisActivity);
         }
@@ -142,6 +143,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (isGoalAchieved) {
             progressBar.setProgress(100);
         }
+
+    }
+
+    private void setSettings() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(thisActivity);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("battery_saving_mode_switch", settings[0] == 1);
+        editor.putString("map_style", String.valueOf(settings[2]));
+        editor.putString("difficulty_list", String.valueOf(settings[1]));
+        editor.commit();
     }
 
 
@@ -278,7 +289,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             circle.remove();
         }
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(thisActivity);
         int difficulty = settings[1];
         if (difficulty == 1) {
             Constants.MAX_DISTANCE_TO_COLLECT_LETTER = 30;
