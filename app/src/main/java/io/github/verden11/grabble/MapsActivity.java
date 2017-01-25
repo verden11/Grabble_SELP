@@ -558,6 +558,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
+                        if (mGoogleApiClient != null) {
+                            mGoogleApiClient.connect();
+                        }
+                        if (mGoogleApiClient.isConnected()) {
+                            startLocationUpdates();
+                        }
                         mMap.setMyLocationEnabled(true);
 
                         // if current location is null then set it to last know location
