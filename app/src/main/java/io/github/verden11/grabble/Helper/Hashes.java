@@ -56,6 +56,12 @@ public class Hashes {
     }
 
 
+    /**
+     * function to hash password, email is used to ensure no to passwords are the same
+     * @param email an email used to login
+     * @param password a password string entered
+     * @return hashed string
+     */
     public static String hashPassword(String email, String password) {
         String mPasswordHash = password + email;
         mPasswordHash = md5(mPasswordHash);

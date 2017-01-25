@@ -14,19 +14,20 @@ import io.github.verden11.grabble.Constants.Constants;
 import io.github.verden11.grabble.R;
 
 /**
- * General static helpers
+ * General helpers class
  */
 
 public class General {
 
+    // Convert InputStream -> String
     public static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
 
 
+    // Helper to create custom array list adapter
     public static class WordScoreLine {
-
         private String prop1;
         private String prop2;
 
@@ -89,7 +90,10 @@ public class General {
     }
 
 
+    // Calculate a score of a String
     public static int calculateWordValue(String word) {
+        if (word.length() != 7) return 0; // word must be 7 letters long
+
         int score = 0;
         for (int i = 0; i < word.length(); i++) {
             score += Queries.getCharValue(word.charAt(i));

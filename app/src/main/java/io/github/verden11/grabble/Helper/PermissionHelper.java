@@ -8,7 +8,9 @@ import android.util.Log;
 
 import io.github.verden11.grabble.Constants.Constants;
 
-
+/**
+ * PermissionHelper used in the MapsActivity only
+ */
 public class PermissionHelper {
 
     public static boolean checkLocationPermission(Activity activity) {
@@ -20,11 +22,6 @@ public class PermissionHelper {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                     android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                //TODO:
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
 
                 //Prompt the user once explanation has been shown
                 //(just doing it here for now, note that with this code, no explanation is shown)

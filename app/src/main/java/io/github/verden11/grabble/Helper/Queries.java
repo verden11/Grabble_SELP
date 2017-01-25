@@ -17,6 +17,11 @@ import java.util.regex.Pattern;
 
 import io.github.verden11.grabble.Constants.Constants;
 
+
+/**
+ * User `Structure` view (on the left android studio) for easier file navigation
+ */
+
 public class Queries {
 
     /**
@@ -107,6 +112,11 @@ public class Queries {
     }
 
 
+    /**
+     * General Queries
+     * @param email is used to find users id as email is unique
+     * @return user_id
+     */
     public static int getIdByEmail(Activity activity, String email) {
         DbHelper mDbHelper = new DbHelper(activity);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -125,6 +135,7 @@ public class Queries {
         return user_id;
     }
 
+
     public static void addChar(Activity activity, int user_id, ArrayList<Character> charList) {
         DbHelper mDbHelper = new DbHelper(activity);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -138,7 +149,6 @@ public class Queries {
                 ContentValues cv = new ContentValues();
                 cv.put(ch + "", charCount);
                 db.update(DbHelper.Stats.TABLE_NAME, cv, "user_id= " + user_id, null);
-                // change bool to int
             }
 
         } finally {

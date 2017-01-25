@@ -114,6 +114,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String DEFAULT_EMPTY = " DEFAULT ''";
     private static final String COMMA_SEP = ",";
 
+    // Schema for Statistics table (Letters collected, words created, etc...)
     private static final String SQL_CREATE_STATS =
             "CREATE TABLE " + Stats.TABLE_NAME + " (" +
                     Stats.COLUMN_USER_ID + " INTEGER PRIMARY KEY REFERENCES " + UsersEntry.TABLE_NAME + "(" + UsersEntry._ID + ")," +
@@ -155,6 +156,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     " )";
 
 
+    // Schema for User Table
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + UsersEntry.TABLE_NAME + " (" +
                     UsersEntry._ID + " INTEGER PRIMARY KEY," +
@@ -170,6 +172,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     UsersEntry.COLUMN_WORD_OF_THE_DAY + TEXT_TYPE + DEFAULT_EMPTY + NOT_NULL
                     + " )";
 
+    // Schema for Settings table
     private static final String SQL_CREATE_SETTINGS =
             "CREATE TABLE " + UsersSettings.TABLE_NAME + " (" +
                     UsersSettings.COLUMN_USER_ID + " INTEGER PRIMARY KEY REFERENCES " + UsersEntry.TABLE_NAME + "(" + UsersEntry._ID + ")," +
