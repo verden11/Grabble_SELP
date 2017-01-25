@@ -32,5 +32,4 @@ dependencies {
     compile 'com.google.maps.android:android-maps-utils:0.4.4'
     compile 'com.android.support:design:25.0.0'
 
-    //TODO: remove everything under this line in final version
 }
